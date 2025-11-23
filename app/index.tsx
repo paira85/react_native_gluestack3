@@ -52,6 +52,16 @@ export default function Home() {
             >
               <ButtonText>Explore Tab Navigation</ButtonText>
             </Button>
+
+            <Button
+              size="md"
+              className="bg-primary-500 px-6 py-2 rounded-full"
+              onPress={() => {
+                router.push('/main');
+              }}
+            >
+              <ButtonText>GO Main</ButtonText>
+            </Button>
           </Box>
           <Box className="flex-1 justify-center items-center h-[20px] w-[300px] lg:h-[160px] lg:w-[400px]">
             <Logo />
