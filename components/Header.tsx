@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Dimensions } from "react-native";
 import { Box } from './ui/box'
 import * as Location from "expo-location";
 import { Image } from './ui/image';
 import { Avatar, AvatarImage } from './ui/avatar';
 
+
+const { width } = Dimensions.get("window");
+const isSmall = width <= 360;
 export default function Header() {
     const alramCount = useState<React.SetStateAction<Number>>(1)
     const [loading, setLoading] = useState(true);
@@ -62,15 +65,16 @@ export default function Header() {
     }, []);
 
     return (
-    <Box className = "flex  flex-row items-center justify-between px-4 py-2 bg-primary-500 " >
+    <Box className ="flex flex-row items-center justify-between px-4 py-2 bg-primary-500 screen-xs:text-[11px]  "
+        >
         {/* Logo */ }
-        < Box className = "flex-row h-full items-center" >
+        < Box className ="flex-row h-full items-center" >
             <Image className="w-10 h-10"
             style={{ tintColor: "#ffffff" }}
             source={require("../assets/images/logs/home_white.png")}
             resizeMode="contain"
             />
-            <Text className="pl-3 text-[22px] font-bold text-white">GoGo Inje</Text>
+            <Text className="pl-3  font-bold text-white">GoGo Inje</Text>
         </Box >
 
         {/* Weather */ }
