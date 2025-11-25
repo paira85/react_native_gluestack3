@@ -41,11 +41,11 @@ export default function Header() {
             const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=kr&appid=${WEATHER_API_KEY}`;
             const res = await fetch(url);
             const data = await res.json();
-            console.log('data', data)
-            console.log('data', Math.round(data.main.temp))
-            console.log('data', data.weather[0].description)
-            console.log('data', data.weather[0].icon)
-            console.log('data', data.name)
+            // console.log('data', data)
+            // console.log('data', Math.round(data.main.temp))
+            // console.log('data', data.weather[0].description)
+            // console.log('data', data.weather[0].icon)
+            // console.log('data', data.name)
             setWeather({
                 temp: Math.round(data.main.temp),           // 온도
                 desc: data.weather[0].description,          // 날씨 설명
@@ -73,6 +73,7 @@ export default function Header() {
             style={{ tintColor: "#ffffff" }}
             source={require("../assets/images/logs/home_white.png")}
             resizeMode="contain"
+            alt="HEADER_LOG"
             />
             <Text className="pl-3  font-bold text-white">GoGo Inje</Text>
         </Box >
@@ -88,6 +89,7 @@ export default function Header() {
                     uri: `https://openweathermap.org/img/wn/${weather?.icon}@2x.png`,
                 }}
                 className="w-10 h-10"
+                alt="HEADER_WEATHER"
                 />
                 <Text className="text-[16px] text-white">
                     {/* ☀ */}
