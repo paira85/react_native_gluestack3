@@ -1,4 +1,5 @@
 import HouseList from "@/components/cards/house/HouseList";
+import FoodList from "@/components/food/FoodList";
 import { Icon } from "@/components/ui/icon";
 import React from "react";
 import { View, Text, TouchableOpacity, SafeAreaView, Dimensions } from "react-native";
@@ -37,7 +38,10 @@ export default function CouponReservationScreen() {
         })}
       </View>
       
-      <HouseList />
+      {/* 음식 */}
+      <FoodList />
+        {/* 숙박 */}
+      {/* <HouseList /> */}
 
       {/* FLOATING SEARCH BUTTON */}
       <TouchableOpacity className="absolute bottom-6 right-5 w-14 h-14 rounded-full bg-blue-900 justify-center items-center">

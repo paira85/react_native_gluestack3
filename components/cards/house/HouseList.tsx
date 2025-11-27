@@ -6,9 +6,9 @@ import { View, Text, TouchableOpacity, Image, ScrollView, SafeAreaView, Dimensio
 
 export default function HouseList() {
   return (
-    <ScrollView className="px-4" showsVerticalScrollIndicator={false}>
-      
-
+    <>
+    <Text className="px-4 mt-6 text-xl font-bold text-blue-900">숙박 목록</Text>
+    <ScrollView className="px-4" showsVerticalScrollIndicator={false}>     
         {/* TOTAL + SORT */}
         <View className="flex-row justify-between items-center mt-5">
           <Text className="text-sm">
@@ -34,6 +34,6 @@ export default function HouseList() {
         <HoluseCards />
         
       </ScrollView>
-
+    </>
   )
 }
