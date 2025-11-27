@@ -46,11 +46,12 @@ export default function MainLayout() {
   ];
   
   const categoriesRow1 = [
-    { label: "관광선물", icon: require("/assets/images/icons/gift.png") ,"id":"1"},
-    { label: "산책", icon: require("/assets/images/icons/gps.png") ,"id":"2"},
-    { label: "카페/펍", icon: require("/assets/images/icons/coffee-cup.png") ,"id":"3"},
+    { label: "기념품", icon: require("/assets/images/icons/gift.png") ,"id":"1"},
+    { label: "산책로", icon: require("/assets/images/icons/gps.png") ,"id":"2"},
+    { label: "카페/펌", icon: require("/assets/images/icons/coffee-cup.png") ,"id":"3"},
     { label: "음식점", icon: require("/assets/images/icons/pizza.png") ,"id":"4"},
     { label: "서핑", icon: require("/assets/images/icons/skateboard.png") ,"id":"5"},
+    { label: "숙소", icon: require("/assets/images/icons/skateboard.png") ,"id":"6"},
   ];
 
   const [enjoiTabIndex , setEnJoiTabIndex] = useState<Number>(0)

@@ -2,6 +2,7 @@ import { Icon } from '@/components/ui/icon';
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native';
 import HouseImage from './HouseImage';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function HoluseCards() {
     const imageUrls1=[
