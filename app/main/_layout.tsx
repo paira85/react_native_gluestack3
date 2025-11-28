@@ -30,6 +30,7 @@ import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
 import EnjoiList from '@/components/enjoi/EnjoiList';
 import { router, useLocalSearchParams } from 'expo-router';
+import RootNavigation from '../navigate';
 
 export default function MainLayout() {
   const bannerData = [
@@ -133,10 +134,11 @@ export default function MainLayout() {
                                
             </Box>
             <Divider className="bg-primary-500" />
-            {/* 하단 큰 아이콘 메뉴 */}
-            <BottomMenu />
+            
         </Box>
         <Footer />        
+        {/* 하단 큰 아이콘 메뉴 */}
+        <BottomMenu />
          
         </ScrollView>
     </SafeAreaView>

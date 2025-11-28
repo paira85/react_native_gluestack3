@@ -1,20 +1,27 @@
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+// export {
+//   // Catch any errors thrown by the Layout component.
+//   ErrorBoundary,
+// } from 'expo-router';
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+// export const unstable_settings = {
+  
+//   initialRouteName: '(tabs)',
+// };
 
 import { Stack } from 'expo-router';
+import RootNavigation from '../navigate';
 
 export default function AppLayout() {
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="about"  />
+       <Stack.Screen
+        name="(tabs)"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="about"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

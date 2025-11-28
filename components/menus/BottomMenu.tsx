@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box } from '../ui/box'
-import { Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import { Image } from '@/components/ui/image';
+import { router } from 'expo-router';
 
 export default function BottomMenu() {
     const placeholder = (w, h) => ({ uri: `https://via.placeholder.com/${w}x${h}.png?text=IMG` });
@@ -29,7 +30,14 @@ export default function BottomMenu() {
         {/* MY */}
         <View className="flex-1 items-center">
             {/* <Image source={placeholder(50, 50)} className="w-8 h-8" alt="BOTTOMMY"/> */}
-            <Text className="text-green-600 mt-1 font-bold">MY</Text>
+            <Pressable
+                onPress={()=>{                    
+                    router.push({
+                        pathname: "/schedule",
+                    })
+                }}>
+                <Text className="text-green-600 mt-1 font-bold">MyData</Text>
+            </Pressable>
         </View>
 
         {/* MENU */}
