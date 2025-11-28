@@ -100,7 +100,7 @@ export default function ScheduleAddRange() {
       {/* 다음 버튼 */}
       <TouchableOpacity
         disabled={!startDate || !endDate}
-        onPress={() => navigation.navigate("schedule/courseSelect", { startDate, endDate })}
+        onPress={() => navigation.navigate("schedule/scheduleSelect", { startDate, endDate })}
         className={`mt-10 py-4 rounded-xl ${
           startDate && endDate ? "bg-blue-700" : "bg-gray-300"
         }`}

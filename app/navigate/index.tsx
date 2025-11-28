@@ -1,6 +1,6 @@
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import CourseSelect from "../schedule/courseSelect";
+import CourseSelect from "../schedule/scheduleSelect";
 
 
 const Stack = createNativeStackNavigator();

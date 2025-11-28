@@ -1,45 +1,43 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { Icon } from '@/components/ui/icon';
+import ScheduleModal from '@/components/schedule/scheduleModal'
+import Feather from '@expo/vector-icons/Feather';
+
+
+import {
+    AddIcon,
+    MailIcon
+}
+    from 'lucide-react-native';
+import { useState } from "react";
 
 export default function ScheduleResult() {
-  const { startDate,endDate, selected } = useRoute().params;
-  console.log('endDate' , startDate)
-  console.log('endDate' , endDate)
-  console.log('endDate' , selected)
+  const { startDate, endDate, datas } = useRoute().params;
 
-  // 예시 데이터 (DB 연동 가능)
-  const timeline = [
-    {
-      day: 1,
-      date: "2025-11-29",
-      list: [
-        { time: "09:00", title: "아이서프", price: 65000 },
-        { time: "13:00", title: "힐링서프", price: 55000 },
-        { time: "19:00", title: "저녁 바비큐", price: 42000 },
-      ],
-    },
-    {
-      day: 2,
-      date: "2025-11-30",
-      list: [
-        { time: "10:00", title: "오색그린야드호텔 온천", price: 20000 },
-        { time: "15:00", title: "보난자요트투어", price: 120000 },
-      ],
-    },
-  ];
+  const [ modalVisible , setModalVisible ] = useState(true)
+  const totalDays = Object.keys(datas).length - 1; // 3
+  const totalNights = Object.keys(datas).length ;           // 2
+
+  for( var key in datas){
+    console.log('key ' , datas [key])
+  }
+
+  console.log('datasaa : ' , datas)
 
   return (
     <ScrollView className="flex-1 bg-gray-50 px-5 pt-14">
       {/* 상단 타이틀 영역 */}
       <View className="flex-row justify-between items-center mb-5">
         <Text className="text-2xl font-bold">내 일정</Text>
-        <Ionicons name="create-outline" size={26} color="#444" />
       </View>
 
-      <Text className="text-gray-500 mb-2 text-base">
-        ✨ {startDate} 부터 총 {timeline.length}박 {timeline.length + 1}일
-      </Text>
+      <View className="flex-row w-full justify-between px-3 py-2  "> 
+        <Text>✨ {startDate} 부터 총 {totalDays}박 {totalNights}일</Text>
+        
+        <Ionicons name="create-outline" size={24} color="#444" />
+      </View>
 
       {/* 지출 금액 요약 */}
       <View className="bg-white p-4 rounded-2xl shadow mb-6">
@@ -54,34 +52,50 @@ export default function ScheduleResult() {
       </View>
 
       {/* DAY별 타임라인 */}
-      {timeline.map((dayObj, idx) => (
-        <View key={idx} className="mb-8">
-          <Text className="font-bold text-xl mb-3">
-            D{dayObj.day} <Text className="text-gray-500 text-base">({dayObj.date})</Text>
-          </Text>
+      {Object.entries(datas).map( ([key ,values], index)  => (
+        <View key={index} className="mb-5 bg-gray-200  ">
+          <View className="flex-row w-full justify-between px-3 py-2  "> 
+            <Text className="font-bold mb-3  text-base ">
+              {index+1}일차 <Text className="text-gray-500 text-base ">({key})</Text>           
+            </Text>
+            <Ionicons name="add-circle-outline" size={24} color="black" />
+          </View>
 
-          {dayObj.list.map((item, i) => (
+          {values.map((item, i) => (
             <View key={i} className="flex-row">
               {/* Time */}
               <View className="w-16">
-                <Text className="text-gray-600 font-medium">{item.time}</Text>
+                <Text className="text-gray-600 font-medium text-center text-base">{i+1}</Text>
               </View>
 
               {/* Timeline Line */}
               <View className="items-center mr-4">
                 <View className="w-3 h-3 rounded-full bg-pink-500" />
-                {i !== dayObj.list.length - 1 && <View className="w-0.5 h-10 bg-gray-300" />}
+                {i !== values.length - 1 && <View className="w-0.5 h-10 bg-gray-300" />}
               </View>
 
               {/* Content Box */}
-              <View className="flex-1 bg-white p-4 rounded-2xl shadow mb-6">
-                <Text className="font-semibold text-gray-800">{item.title}</Text>
-                <Text className="mt-1 text-gray-500">₩ {item.price.toLocaleString()}</Text>
+              <View className="flex-1 bg-white p-4 rounded-2xl shadow mb-6 flex-row justify-between" >
+                <Text className="font-semibold text-gray-800">{item.name}</Text>
+                {/* <Text className="mt-1 text-gray-500">₩ {item.price.toLocaleString()}</Text> */}
+                <Feather name="minus-circle" size={22} color="black" />
               </View>
             </View>
           ))}
         </View>
       ))}
+
+
+      <ScheduleModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onSubmit={(day , ids) => {
+            console.log('selectedDay', day)
+            setScheduleMapping(day , ids);
+            setModalVisible(false);
+          }}
+        />
+
 
       <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12">
         <Text className="text-center text-white font-bold text-lg">PDF / 엑셀로 저장</Text>
