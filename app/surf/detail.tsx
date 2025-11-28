@@ -8,10 +8,11 @@ import {
     MailIcon,
     ChromeIcon,
     PhoneIcon,
+    ArrowLeftIcon
 }
     from 'lucide-react-native';
 import { Box } from '@/components/ui/box';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -21,7 +22,7 @@ import { Dimensions } from 'react-native';
 const screenWidth = Dimensions.get('window').width;
 
 export default function SurfCardDetail() {
-
+    const navigation = useNavigation();
     const { id } = useLocalSearchParams();
     const detailId = String(id);
 
@@ -83,17 +84,14 @@ export default function SurfCardDetail() {
         <SafeAreaView className="bg-white flex-1" >
         <ScrollView className="flex-1" contentContainerStyle={{ flexGrow: 1 }}>
             <Header />       
-            <Box className="h-full w-full mb-10">    
-                <View className="gpa-4 flex-row">
-                    <Pressable onPress={() =>
-                                    router.push({
-                                        pathname: "/main"
-                                    })
-                                }
-                    ><Text>Home</Text></Pressable>
-                    <Text>></Text> 
-                    <Text>Card Detail</Text>
-                </View>       
+            <Box className="h-full w-full mb-10 relative">    
+                            
+                <Pressable className="absolute top-5 left-5 w-8 h-8 rounded-full bg-white justify-center items-center z-20"
+                    onPress={ () => {                       
+                        navigation.goBack()
+                    }}>
+                    <Icon as={ArrowLeftIcon}  />
+                </Pressable>
                 <Box className="relative">  
                     <Image
                         //source={require('/assets/images/card/image_0.jpg')}

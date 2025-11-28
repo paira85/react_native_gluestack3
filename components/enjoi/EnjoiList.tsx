@@ -1,9 +1,9 @@
 import React from 'react'
 import { Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
-import { Text } from '../ui/text'
-import { Box } from '../ui/box';
-import { Image } from '../ui/image';
-import { HStack } from '../ui/hstack';
+import { Text } from '@/components/ui/text';
+import { Box } from '@/components/ui/box';
+import { Image } from '@/components/ui/image';
+import { HStack } from '@/components/ui/hstack';
 import { router } from 'expo-router';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
     index: number;
 };
 
-export default function SurfCards ({fnTabIndex,index } : Props) {
+export default function EnjoiList ({fnTabIndex,index } : Props) {
    
     const courseTabs = ["양양서핑", "무료체험", "유료체험", "작은영화관", "GOGO"];
 

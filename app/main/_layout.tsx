@@ -28,7 +28,7 @@ import Footer from '@/components/Footer';
 import BottomMenu from '@/components/menus/BottomMenu';
 import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
-import SurfCards from '@/components/cards/SurfCards';
+import EnjoiList from '@/components/enjoi/EnjoiList';
 import { router, useLocalSearchParams } from 'expo-router';
 
 export default function MainLayout() {
@@ -125,14 +125,8 @@ export default function MainLayout() {
                   ))}
                 </Box>
               </Box>
-
-{/* 
-              <SurfCards data={{
-                fnTabIndex:{setEnJoiTabIndex },
-                index:{enjoiTabIndex}
-              }}  />              */}
-
-               <SurfCards 
+              
+               <EnjoiList 
                   fnTabIndex={setEnJoiTabIndex}  
                   index={enjoiTabIndex} 
                 />   
