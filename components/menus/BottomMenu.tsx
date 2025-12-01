@@ -18,7 +18,14 @@ export default function BottomMenu() {
         {/* TAXI */}
         <View className="flex-1 items-center">
             {/* <Image source={placeholder(50, 50)} className="w-8 h-8" alt="BOTTOMTAXI" /> */}
-            <Text className="text-green-600 mt-1 font-bold">TAXI</Text>
+             <Pressable
+                onPress={()=>{                    
+                    router.push({
+                        pathname: "/settlement/settlementList",
+                    })
+                }}>
+                <Text className="text-green-600 mt-1 font-bold">Calc</Text>
+            </Pressable>
         </View>
 
         {/* MAP */}
