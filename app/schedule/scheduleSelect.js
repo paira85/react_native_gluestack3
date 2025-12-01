@@ -10,6 +10,8 @@ const places = [
   { id: 2, name: "아이서프", img: require("/assets/images/background/1739799352351-15.jpg") },
   { id: 3, name: "서프호랑", img: require("/assets/images/background/1739799352351-15.jpg") },
   { id: 4, name: "힐링서프", img: require("/assets/images/background/1739799352351-15.jpg") },
+  { id: 5, name: "고성카페", img: require("/assets/images/background/1739799352351-15.jpg") },
+  { id: 6, name: "뷰카페", img: require("/assets/images/background/1739799352351-15.jpg") },
 ];
 
 
