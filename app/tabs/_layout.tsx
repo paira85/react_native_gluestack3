@@ -9,7 +9,10 @@
 // };
 
 import { Stack } from 'expo-router';
+import { useSettlementStore } from "../../store/settlementStore";
+
 import RootNavigation from '../navigate';
+import { useEffect } from 'react';
 
 export default function AppLayout() {
   return (

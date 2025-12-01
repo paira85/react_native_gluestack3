@@ -24,3 +24,7 @@ source={p.img}
 className="w-full h-36"
 resizeMode="cover"
 />
+
+
+npx expo install expo-sqlite
+npx expo install expo-sqlite
