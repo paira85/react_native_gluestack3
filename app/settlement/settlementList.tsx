@@ -6,7 +6,7 @@ import SettlementItem from "../../components/settlement/SettlementItem";
 import { Box } from "@/components/ui/box";
 import { router } from "expo-router";
 import { Divider } from "@/components/ui/divider";
-// import { useSettlementStore } from "@/store/settlementStore";
+import { useSettlementStore } from "@/store/settlementStore";
 
 export default function SettlementListScreen() {
     const navigation = useNavigation();
@@ -27,31 +27,9 @@ export default function SettlementListScreen() {
     }, [list]);
 
 
-
-    useEffect(() => {
-        init();
-    }, []);
-
-    if (Platform.OS === "web") {
-        return <Text style={{ padding: 20 }}>⚠ Android 전용 기능</Text>;
-    }
-
-    if (!initialized) return <ActivityIndicator size="large" style={{ marginTop: 100 }} />;
-
-
-    const saveItem = () => {
-        const data = { title, date, amount: Number(amount) };
-        editId ? update(editId, data) : add(data);
-        reset();
-    };
-
-    const reset = () => {
-        setTitle("");
-        setDate("");
-        setAmount("");
-        setEditId(null);
-    };
-
+    useEffect(()=>{
+        init()
+    },[])
     return (
 
         // <Suspense fallback={<Text>DB Loading...</Text>}>
@@ -92,7 +70,7 @@ export default function SettlementListScreen() {
                 onPress={(item) =>
                     router.push({
                         pathname: "/settlement/settlementForm",
-                        params: { id: item.id }
+                        params: { id: '' }
                     })
 
                 }

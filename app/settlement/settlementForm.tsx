@@ -14,7 +14,10 @@ export default function SettlementFormScreen() {
   const id = route.params?.id;
 
   const { list, add, update, remove } = useSettlementStore();
-  const existing = list.find((d) => d.id === id);
+  console.log('list' ,list)
+  console.log('id' ,id)
+  const existing = list.find((d) => String(d.id) === String(id));
+  console.log('existing' ,existing)
 
   const [title, setTitle] = useState(existing?.title || "");
   const [date, setDate] = useState(existing?.date || "");
