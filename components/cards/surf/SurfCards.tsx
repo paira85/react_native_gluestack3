@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Dimensions, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import { Image } from 'react-native';
-import { Text } from '@/components/ui/text';
+import { Text } from 'react-native';
 import { Box } from '@/components/ui/box';
 
 import { HStack } from '@/components/ui/hstack';

@@ -16,7 +16,7 @@ import { Fab, FabIcon } from '@/components/ui/fab';
 import { MoonIcon, SunIcon } from '@/components/ui/icon';
 import RootNavigation from './navigate';
 import { SQLiteProvider } from "expo-sqlite";
-
+import { InitDBWrapper } from '@/hook/InitDBWrapper';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -42,15 +42,21 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
-  return <RootLayoutNav />;
+  return (
+      <SQLiteProvider databaseName="gogoinje.db">
+        <RootLayoutNav />
+      </SQLiteProvider>
+    );
 }
+
 
 function RootLayoutNav() {
   const pathname = usePathname();
   const [colorMode, setColorMode] = useState<'light' | 'dark'>('light');
 
+  // useInitDB();  
+
   return (
-    <SQLiteProvider databaseName="gogoinje.db">
       <GluestackUIProvider mode={colorMode}>
         <ThemeProvider value={colorMode === 'dark' ? DarkTheme : DefaultTheme}>
           
@@ -68,6 +74,5 @@ function RootLayoutNav() {
           )}
         </ThemeProvider>
       </GluestackUIProvider>
-    </SQLiteProvider>
   );
 }

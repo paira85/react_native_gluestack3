@@ -6,7 +6,7 @@ import { Image } from 'react-native';
 import FoodCard from './FoodCard';
 import { Food } from '@/types/Food';
 const screenWidth = Dimensions.get('window').width;
-
+ 
 
 export default function FoodCards() {
     const [foodData,setFoodData] = useState<Food[]>([]);
@@ -66,8 +66,7 @@ export default function FoodCards() {
                         return (
                             <TouchableOpacity
                                 key={label}
-                                className={`px-4 py-1.5 rounded-full border ${selected ? "bg-black border-black" : "border-gray-300"
-                                    }`}
+                                className={`px-4 py-1.5 rounded-full border ${selected ? "bg-black border-black" : "border-gray-300"}`}
                             >
                                 <Text className={`${selected ? "text-white" : "text-gray-700"}`}>{label}</Text>
                             </TouchableOpacity>
@@ -80,7 +79,7 @@ export default function FoodCards() {
             <ScrollView className="flex-1 " showsVerticalScrollIndicator={false}>           
                 {
                 foodData.map( (item,idx) => (
-                    <FoodCard food={item} />
+                    <FoodCard key={idx} food={item} />
                 ))}
 
             </ScrollView>

@@ -9,7 +9,7 @@ import { Avatar, AvatarImage } from './ui/avatar';
 const { width } = Dimensions.get("window");
 const isSmall = width <= 360;
 export default function Header() {
-    const alramCount = useState<React.SetStateAction<Number>>(1)
+    const [alramCount,setAlramCount] = useState<number>(1)
     const [loading, setLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState(null);
     const [location, setLocation] = useState(null);

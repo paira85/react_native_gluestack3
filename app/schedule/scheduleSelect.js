@@ -69,8 +69,6 @@ export default function CourseSelect() {
 
   const setScheduleMapping  = (day , ids) => {
 
-
-
     const selectObj = places.filter(p => ids.includes(p.id));
     console.log('selectObj ' , selectObj)
 

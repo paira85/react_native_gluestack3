@@ -1,6 +1,6 @@
 import React from 'react'
 import { Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
-import { Text } from '@/components/ui/text';
+import { Text } from 'react-native';  
 import { Box } from '@/components/ui/box';
 import { Image } from '@/components/ui/image';
 import { HStack } from '@/components/ui/hstack';

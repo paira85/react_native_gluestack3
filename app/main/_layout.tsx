@@ -80,14 +80,14 @@ export default function MainLayout() {
                 {/* 1줄 */}
                 <Box className="flex-row justify-around gap-4">
                   {categoriesRow1.map((item) => (
-                    <Pressable onPress={() =>
+                    <Pressable key={item.label}  onPress={() =>
                           router.push({
                               pathname: "/event",
                               params: { id: item.id }
                           })
                       }
                     >
-                      <View key={item.label} className="items-center ">                     
+                      <View className="items-center ">                     
                           <Image
                             source={item.icon}
                             style={{ width: "100%", height: "100%" }}
