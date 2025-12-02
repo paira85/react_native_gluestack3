@@ -7,6 +7,7 @@ import { Box } from "@/components/ui/box";
 import { router } from "expo-router";
 import { Divider } from "@/components/ui/divider";
 import { useSettlementStore } from "@/store/settlementStore";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SettlementListScreen() {
     const navigation = useNavigation();
@@ -31,14 +32,9 @@ export default function SettlementListScreen() {
         init()
     },[])
     return (
-
-        // <Suspense fallback={<Text>DB Loading...</Text>}>
-        //     <SQLiteProvider
-        //       databaseName="settlement.db"
-        //       onInit={migrateDbIfNeeded}
-        //       useSuspense={true}
-        //     >
-        <Box className="flex-1 p-4 bg-gray-100">
+        
+        <SafeAreaView className="bg-white flex-1" >
+        <Box className="flex-1 p-4 bg-gray-100 top-10">
             <Text className="text-2xl font-bold mb-4">정산 내역</Text>
 
             <FlatList
@@ -56,7 +52,7 @@ export default function SettlementListScreen() {
             />
 
             {/* 🔥 총 합산 영역 */}
-            <Box className="bg-white p-4 rounded-xl shadow mt-3">
+            <Box className="bg-white p-4 rounded-xl shadow mt-3 py-4 bottom-10">
                 <Text className="text-lg font-semibold text-gray-700">총 합계</Text>
                 <Divider className="my-2" />
                 <Text className="text-2xl font-bold text-blue-600">
@@ -66,7 +62,7 @@ export default function SettlementListScreen() {
 
             {/* 등록 버튼 */}
             <Pressable
-                className="mt-6 bg-blue-600"
+                className="mt-6 bg-blue-600 py-4 bottom-10"
                 onPress={(item) =>
                     router.push({
                         pathname: "/settlement/settlementForm",
@@ -78,8 +74,6 @@ export default function SettlementListScreen() {
                 <Text className="text-white font-semibold">+ 정산 입력</Text>
             </Pressable>
         </Box>
-
-        //     </SQLiteProvider>
-        //   </Suspense>
+        </SafeAreaView>
     );
 }

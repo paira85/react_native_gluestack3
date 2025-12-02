@@ -62,50 +62,87 @@ function getDB() {
 /* ---------------------------
     테이블 생성
 ---------------------------- */
-export function initDB() {
-  const db = getDB();
-  console.log('db' , db)
-  db.transaction(tx => {
-    tx.executeSql(
-      `
-      CREATE TABLE IF NOT EXISTS settlement (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        amount INTEGER,
-        created_at TEXT
-      );
-      `
+export async function initDB() {
+  // const db = getDB();
+  // console.log('db' , db)
+  // db.transaction(tx => {
+  //   tx.executeSql(
+  //     `
+  //     CREATE TABLE IF NOT EXISTS settlement (
+  //       id INTEGER PRIMARY KEY AUTOINCREMENT,
+  //       title TEXT,
+  //       amount INTEGER,
+  //       created_at TEXT
+  //     );
+  //     `
+  //   );
+  // });
+
+  console.log('Platform.OS' , Platform.OS)
+  if (Platform.OS === "web") return;
+
+  const db = useSQLiteContext();
+
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS settlement (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT,
+      date TEXT,
+      amount INTEGER,
+      created_at TEXT
     );
-  });
+  `);
+
+  return db;
 }
 
 /* ---------------------------
     전체 조회
 ---------------------------- */
-export function selectAll(callback) {
-  const db = getDB();
-  db.transaction(tx => {
-    tx.executeSql(
-      "SELECT * FROM settlement ORDER BY id DESC",
-      [],
-      (_, result) => callback(result.rows._array)
-    );
-  });
+export async function selectAll(callback) {
+  // const db = getDB();
+  // db.transaction(tx => {
+  //   tx.executeSql(
+  //     "SELECT * FROM settlement ORDER BY id DESC",
+  //     [],
+  //     (_, result) => callback(result.rows._array)
+  //   );
+  // });
+
+  if (Platform.OS === "web") return;
+
+  const db = useSQLiteContext();
+
+  const rows = await db.getAllAsync("SELECT * FROM settlement;");
+
+  return rows
 }
 
 /* ---------------------------
     INSERT
 ---------------------------- */
-export function insertItem(data, callback) {
-  const { title, amount } = data;
-  const db = getDB();
-  db.transaction(tx => {
-    tx.executeSql(
-      `INSERT INTO settlement (title, amount, created_at) VALUES (?, ?, datetime('now'))`,
-      [title, amount],
-      () => callback()
-    );
-  });
+export async function insertItem(data, callback) {
+  // const { title, amount } = data;
+  // const db = getDB();
+  // db.transaction(tx => {
+  //   tx.executeSql(
+  //     `INSERT INTO settlement (title, amount, created_at) VALUES (?, ?, datetime('now'))`,
+  //     [title, amount],
+  //     () => callback()
+  //   );
+  // });
+
+  if (Platform.OS === "web") return;
+
+  const db = useSQLiteContext();
+
+  const result = await db.runAsync(
+    `INSERT INTO settlement (title, date, amount, created_at)
+      VALUES (?, ?, ?, ?)`,
+    [data.title, data.date , data.price, new Date().toISOString()]
+  );
+  
+  return result
 }
 
 /* ---------------------------
@@ -126,13 +163,18 @@ export function updateItem(id, data, callback) {
 /* ---------------------------
     DELETE
 ---------------------------- */
-export function deleteItem(id, callback) {
-  const db = getDB();
-  db.transaction(tx => {
-    tx.executeSql(
-      `DELETE FROM settlement WHERE id = ?`,
-      [id],
-      () => callback()
-    );
-  });
+export async function deleteItem(id, callback) {
+  // const db = getDB();
+  // db.transaction(tx => {
+  //   tx.executeSql(
+  //     `DELETE FROM settlement WHERE id = ?`,
+  //     [id],
+  //     () => callback()
+  //   );
+  // });
+  if (Platform.OS === "web") return;
+
+  const db = useSQLiteContext();
+
+  await db.runAsync(`DELETE FROM settlement WHERE id = ?`, [id]);
 }

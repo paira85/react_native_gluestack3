@@ -15,6 +15,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Fab, FabIcon } from '@/components/ui/fab';
 import { MoonIcon, SunIcon } from '@/components/ui/icon';
 import RootNavigation from './navigate';
+import { SQLiteProvider } from "expo-sqlite";
+
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,23 +50,24 @@ function RootLayoutNav() {
   const [colorMode, setColorMode] = useState<'light' | 'dark'>('light');
 
   return (
-    <GluestackUIProvider mode={colorMode}>
-      <ThemeProvider value={colorMode === 'dark' ? DarkTheme : DefaultTheme}>
-        
-        <Slot />
-        {pathname === '/' && (
-          <Fab
-            onPress={() =>
-              setColorMode(colorMode === 'dark' ? 'light' : 'dark')
-            }
-            className="m-6"
-            size="lg"
-          >
-            <FabIcon as={colorMode === 'dark' ? MoonIcon : SunIcon} />
-          </Fab>
-        )}
-      </ThemeProvider>
-
-    </GluestackUIProvider>
+    <SQLiteProvider databaseName="gogoinje.db">
+      <GluestackUIProvider mode={colorMode}>
+        <ThemeProvider value={colorMode === 'dark' ? DarkTheme : DefaultTheme}>
+          
+          <Slot />
+          {pathname === '/' && (
+            <Fab
+              onPress={() =>
+                setColorMode(colorMode === 'dark' ? 'light' : 'dark')
+              }
+              className="m-6"
+              size="lg"
+            >
+              <FabIcon as={colorMode === 'dark' ? MoonIcon : SunIcon} />
+            </Fab>
+          )}
+        </ThemeProvider>
+      </GluestackUIProvider>
+    </SQLiteProvider>
   );
 }
