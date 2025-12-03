@@ -20,7 +20,6 @@ export const useSettlementStore = create((set) => ({
 
   add: async(data) => {
     const newItem = {
-      id: Date.now(), // 또는 uuid() 사용 가능
       ...data,
       created_at: new Date().toISOString(),
     };
