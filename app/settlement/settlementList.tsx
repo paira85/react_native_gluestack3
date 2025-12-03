@@ -6,32 +6,63 @@ import { Box } from "@/components/ui/box";
 import { router } from "expo-router";
 import { Divider } from "@/components/ui/divider";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SettlementItem from "@/components/settlement/SettlementItem";
+import SettlementItem from "@/components/settlement/SettlmementModal";
 import { useSettlement } from "@/hook/useSettlement";
 import { useSQLiteContext } from "expo-sqlite";
 //로컬 스토어
 import { useSettlementStore } from "../../store/settlementStore";
 import { Ionicons } from "@expo/vector-icons";
+import SettlmementModal from "@/components/settlement/SettlmementModal";
 
 export default function SettlementListScreen() {
     const navigation = useNavigation();
     //안드로이드용
     const db = useSQLiteContext();
     const { list,initialized , refresh} = useSettlement(db);
-    const { listStore , groupAdd} = useSettlementStore();
+    const { listStore , groupStroe , update} = useSettlementStore();
 
-    console.log('listStore', listStore)
-    console.log('groupAdd', groupAdd)
+    const [selected, setSelected] = useState(0);
+    const [groupSelected, setGroupSelected] = useState(0);
+    const groupData = groupStroe.filter(item => String(item.id) === String(groupSelected))
+    const [modalVisible , setModalVisible] = useState(false)
         
     // 📌 합계 계산
-    const totalAmount = useMemo(() => {
-        return list.reduce((sum, x) => sum + Number(x.amount || 0), 0);
-    }, [list]);
+    // const totalAmount = useMemo(() => {
+    //     return list.reduce((sum, x) => sum + Number(x.amount || 0), 0);
+    // }, [list]);
 
+    console.log('selected' , selected)
+    console.log('selected' , listStore)
+
+    const selectList = listStore.filter( m => String(m.group_id) === String(selected))
+    
+    console.log('selectList' , selectList)
+    const totalAmount = useMemo(() => {
+        // return selectList.reduce(
+        //     (sum, x) => ({
+        //     pay : sum.pay + Number(x.pay||0),
+        //     per : sum.per + Number(x.per||0),
+        //     }),
+        //     {pay:0,per:0}
+        // );
+
+        return selectList.reduce(
+            (sum, x) => ({
+                pay: sum.pay + Number(x.pay || 0),
+                per: sum.per + (x.complate == true ? 0  :  Number(x.per || 0)),
+                complate: sum.complate + (x.complate == true ? 1 :  0),
+                need: sum.need +  (x.complate == true ? 0  :  x.pay),
+                total: sum.total + 1,
+            }),
+            { pay: 0, per: 0 , complate:0, need:0, total:0} // 초기값
+        );
+    }, [selectList ]);
+
+    console.log('totalAmount' , totalAmount)
     // const [state, set] = useState({ list: [], initialized: false });
    
-    useEffect( ()=>{
-        console.log('SettlementListScreen useEffect')
+    // useEffect( ()=>{
+        // console.log('SettlementListScreen useEffect')
         
         // 안드로이드용
         // const init = async () => {
@@ -52,87 +83,8 @@ export default function SettlementListScreen() {
         // };
 
         // init();
-    },[])
+    // },[])
 
-    
-    const summary = {
-        total: 25000,
-        members: 2,
-        complete: 0,
-        need: 1,
-    };
-
-    const members = [
-        {
-        id: 1,
-        name: "사용자",
-        role: "생성자",
-        actual: 25000,
-        share: 12500,
-        type: "receive",
-        },
-        {
-        id: 2,
-        name: "동반자",
-        role: "",
-        actual: 0,
-        share: 12500,
-        type: "pay",
-        },
-    ];
-    
-
-    
-    // 예시 데이터
-    const settlementGroups = [
-    {
-        id: "group1",
-        name: "박&모 정산",
-        summary: {
-        total: 23355,
-        members: 2,
-        perUser: 456,
-        pending: 123,
-        complete: 0,
-        need: 1,
-        },
-        items: [
-        {
-            id: 1,
-            category: "음식",
-            title: "123",
-            memo: "123",
-            pay: 123,
-            settle: 123,
-            result: 123,
-        },
-        {
-            id: 2,
-            category: "음식",
-            title: "33",
-            memo: "222",
-            pay: 23232,
-            settle: 23232,
-            result: 23232,
-        },
-        ],
-    },
-    {
-        id: "group2",
-        name: "부산 여행 정산",
-        summary: {
-        total: 70200,
-        members: 3,
-        perUser: 23400,
-        pending: 1000,
-        complete: 1,
-        need: 3,
-        },
-        items: [],
-    },
-    ];
-
-     const [selected, setSelected] = useState(settlementGroups[0]);
 
 
     return (        
@@ -140,25 +92,38 @@ export default function SettlementListScreen() {
             <ScrollView className="flex-1 bg-[#0B1C3F] px-5 pt-4">
                 {/* Back Button */}
                 <View className="flex-row items-center mb-4">
-                    <Ionicons name="chevron-back" size={24} color="white" />
+                    <Ionicons name="chevron-back" size={24} color="white"  onPress={() => {
+                                router.push({
+                                       pathname: '../',
+                                       params: {
+                                           
+                                       }
+                                   })
+                            }
+                        }
+                        />
                     <Text className="text-white text-xl font-semibold ml-2">
                     정산 내역
                     </Text>
                 </View>
 
-                <View className="bg-[#0F2C63] p-3 rounded-xl">
-                    {settlementGroups.map((g) => (
+                <View className="bg-[#0F2C63] p-3 rounded-xl flex-row gap-4 ">
+                    {groupStroe?.map((g,idx) => (
                         <TouchableOpacity
-                        key={g.id}
+                        key={idx}
                         className="py-2"
-                        onPress={() => setSelected(g)}
+                        onPress={() => {
+                                setGroupSelected(g.id)
+                                setSelected(g.id)
+                            }
+                        }
                         >
                         <Text
-                            className={`${
-                            selected.id === g.id ? "text-yellow-300" : "text-white"
+                            className={`bg-white py-3 ${
+                            selected.id === g.id ? "text-yellow-300" : "text-gray"
                             } text-base`}
                         >
-                            {g.name}
+                            {g.groupName}
                         </Text>
                         </TouchableOpacity>
                     ))}
@@ -168,36 +133,37 @@ export default function SettlementListScreen() {
                 {/* Summary Card */}
                 <View className="bg-[#0F2C63] p-4 rounded-2xl mb-6">
                     <Text className="text-lg text-white font-semibold mb-3">
-                        박&모 정산
+                        {groupData.length > 0  && groupData[0].groupName}
                     </Text>
 
                     <View className="flex-row justify-between mb-1">
                         <Text className="text-gray-300">총 지출</Text>
                         <Text className="text-yellow-300 font-semibold">
-                            {totalAmount.toLocaleString()}원
+                            {totalAmount.pay}원
                         </Text>
                     </View>
 
                     <View className="flex-row justify-between mb-1">
                         <Text className="text-gray-300">참여 인원</Text>
                         <Text className="text-yellow-300 font-semibold">
-                            {summary.members}명
+                            {groupData.length > 0  && groupData[0].members}명
+                        </Text>
+                    </View>
+
+                   
+
+                    <View className="flex-row justify-between mt-3">
+                        <Text className="text-red-500 font-semibold">미정산 금액</Text>
+                        <Text
+                            className={`font-bold text-red-500`}
+                        >    {totalAmount.need}원
                         </Text>
                     </View>
 
                     <View className="flex-row justify-between mb-2">
-                        <Text className="text-gray-600">1인당 부담액</Text>
-                        <Text className="font-semibold">
-                            456원
-                        </Text>
-                    </View>
-
-                    <View className="flex-row justify-between mt-3">
-                        <Text className="text-gray-700 font-semibold">미정산 금액</Text>
-
-                        <Text
-                            className={`font-bold text-green-600}`}
-                        >    123
+                        <Text className="text-gray-300">1인당 부담액</Text>
+                        <Text className="text-yellow-300 font-semibold"> 
+                            {totalAmount.per}원
                         </Text>
                     </View>
                     
@@ -205,12 +171,14 @@ export default function SettlementListScreen() {
                     <View className="flex-row justify-between mb-3">
                         <Text className="text-gray-300">정산 완료</Text>
                         <Text className="text-yellow-300 font-semibold">
-                            {summary.complete}/{summary.need}
+                            {totalAmount.complate}/{totalAmount.total}건
                         </Text>
                     </View>
 
                     <View className="flex-row space-x-3 mt-3">
-                        <TouchableOpacity className="flex-1 bg-yellow-300 py-3 rounded-xl">
+                        <TouchableOpacity className="flex-1 bg-yellow-300 py-3 rounded-xl"
+                            onPress={ () => setModalVisible(true)}
+                        >
                             <Text className="text-center text-[#0B1C3F] font-semibold">
                             정산 하기
                             </Text>
@@ -231,51 +199,77 @@ export default function SettlementListScreen() {
                 
                 <View className="space-y-4 pb-20">
                     
-                {listStore.map((m) => (
-                // {list.map((m) => (
-                    <View
-                        key={m.id}
-                        className="bg-[#0F2C63] p-4 rounded-2xl border border-[#223B7F]"
-                    >
-                        {/* Profile Row */}
-                        <View className="flex-row items-center mb-3">
-                        <View className={`w-10 h-10 rounded-full justify-center items-center bg-yellow-300`}>
-                            <Text className="text-[#0B1C3F] font-bold">
-                                음식
+                {listStore && listStore
+                    .filter(m => String(m.group_id) === String(selected))
+                    .map((m) => (
+                        <View
+                            key={m.id}
+                            className="bg-[#0F2C63] p-4 rounded-2xl border border-[#223B7F]"
+                        >
+                            {/* Profile Row */}
+                            <View className="flex-row items-center mb-3">
+                            <View className={`w-10 h-10 rounded-full justify-center items-center bg-yellow-300`}>
+                                <Text className="text-[#0B1C3F] font-bold">
+                                    {m.category}
+                                </Text>
+                            </View>
+
+                            <View className="ml-3">
+                                <Text className="text-white font-semibold">{m.title}</Text>
+                                <Text className="text-gray-300 text-sm"> {m.created_at}</Text>
+                            </View>
+                            </View>
+
+                            {/* Values */}
+                            <View className="flex-row justify-between mb-2">
+                            <Text className="text-gray-300">총지출액</Text>
+                            <Text className="text-white">
+                                KRW {m.pay.toLocaleString()}
                             </Text>
-                        </View>
+                            </View>
 
-                        <View className="ml-3">
-                            <Text className="text-white font-semibold">{m.title}</Text>
-                            <Text className="text-gray-300 text-sm"> {m.date}</Text>
-                        </View>
-                        </View>
+                            <View className="flex-row justify-between mb-3">
+                                <Text className="text-gray-300">인당금액</Text>
+                                <Text className="text-white">
+                                    KRW {m.per.toLocaleString()}
+                                </Text>
+                            </View>
 
-                        {/* Values */}
-                        <View className="flex-row justify-between mb-2">
-                        <Text className="text-gray-300">총지출액</Text>
-                        <Text className="text-white">
-                            KRW {m.amount.toLocaleString()}
-                        </Text>
+                            {/* Result */}
+                        
+                            <View className="flex-row justify-between mb-3">
+                                
+                                    {m.complate == true ? 
+                                    (<Text className="text-green-500 font-bold ">정산완료</Text>): 
+                                    (<Text className="text-red-500 font-bold ">정산대기</Text>)
+                                    }
+                                
+                                <Text className="text-white text-right">
+                                    비고 : {m.memo}
+                                </Text>
+                            </View>
                         </View>
-
-                        <View className="flex-row justify-between mb-3">
-                        <Text className="text-gray-300">인당금액</Text>
-                        <Text className="text-white">
-                            KRW {(m.amount /2).toLocaleString()}
-                        </Text>
-                        </View>
-
-                        {/* Result */}
-                       
-                        <Text className="text-green-400 font-bold text-right">
-                            ● 비고 : 중국집
-                        </Text>
-                    </View>
-                    ))}
+                    )
+                   
+                    )}
                 </View>
             </ScrollView>        
             
+            <SettlmementModal
+                visible={modalVisible}
+                data={selectList.filter(item => (item.complate !== true))}
+                onClose={() => setModalVisible(false)}
+                onSubmit={(ids) => {
+                    console.log('selectedDay', ids)
+                    const updateDate = selectList.filter( item => (item.id === ids))
+                    update(ids, {
+                        ...updateDate
+                        ,complate:true
+                    });
+
+                }}
+            />
+                
 
             {/* 등록 버튼 */}
            

@@ -68,10 +68,14 @@ export default function SettlementFormScreen() {
     }
 
     // 2. 항목들 저장 (루프)
+
+    if (!existing){
+      groupAdd(groupData);
+    }
+
     for (let item of items) {
       item["group_id"] = group_id
-      if (!existing){
-        groupAdd(item);
+      if (!existing){        
         add(item);
       }
     }
