@@ -3,21 +3,28 @@ import { Platform } from "react-native";
 export const isWeb = Platform.OS === "web";
 
 export const useSettlementStore = create((set) => ({
-  list: [],
+  listStore: [],
+  groupStroe:[],
   initialized: false,
   count : 0,
 
+
   initStore: async () => {
     if (Platform.OS === 'web') {
-      set({count: 1,  initialized: true });
+      set({ count: 1,  initialized: true });
       return;
     }   
   },
-  
-  setList : async(rows) =>{
-    set({ list: rows, initialized: true });
-  },
+  groupAdd :async(data)=>{
+    const newItem = {
+      ...data,
+      created_at: new Date().toISOString(),
+    };
 
+    set(prev => ({
+      groupStroe :[...prev.groupStroe , newItem]
+    }))
+  },
   add: async(data) => {
     const newItem = {
       ...data,
@@ -25,14 +32,14 @@ export const useSettlementStore = create((set) => ({
     };
 
     console.log('addData', data)
-    set(prev => ({ list: [...prev.list, newItem] }));
+    set(prev => ({ listStore: [...prev.listStore, newItem] }));
     
   },
 
   update: (id, data) => {
     set(
       prev => ({
-        list: prev.list.map(item =>
+        listStore: prev.listStore.map(item =>
           String(item.id) === String(id)? { ...item, ...data } : item
         )
       })
@@ -42,7 +49,7 @@ export const useSettlementStore = create((set) => ({
   remove: (id) => {
     set(
       prev => ({
-        list: prev.list.filter(item => String(item.id)!== String(id))
+        listStore: prev.listStore.filter(item => String(item.id)!== String(id))
       })
     )
   },

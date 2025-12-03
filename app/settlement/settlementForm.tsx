@@ -17,7 +17,7 @@ export default function SettlementFormScreen() {
   const id = route.params?.id;
 
   //로컬 스토어
-  const { add, update, remove } = useSettlementStore();
+  const { groupAdd ,  add, update, remove } = useSettlementStore();
   
   //안드로이드용
   const db = useSQLiteContext();  
@@ -57,9 +57,21 @@ export default function SettlementFormScreen() {
 
     console.log('items', items)
 
+    let group_id = Date.now();
+    const groupData = {
+      id: group_id,
+      groupName:groupName,
+      members:members,
+      complete: 0,
+      need: 0,
+      total:0
+    }
+
     // 2. 항목들 저장 (루프)
-    for (const item of items) {
-      if (existing){
+    for (let item of items) {
+      item["group_id"] = group_id
+      if (!existing){
+        groupAdd(item);
         add(item);
       }
     }
@@ -284,6 +296,14 @@ export default function SettlementFormScreen() {
           <Text className="text-white font-semibold">삭제하기</Text>
         </Pressable>
       )}
+
+
+      <Pressable className="bg-red-600 mt-4" onPress={async () => { 
+        
+          navigation.goBack(); 
+        }}>
+          <Text className="text-white font-semibold">뒤로가기</Text>
+        </Pressable>
     </Box>
   );
 }

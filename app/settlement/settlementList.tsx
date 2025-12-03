@@ -18,7 +18,10 @@ export default function SettlementListScreen() {
     //안드로이드용
     const db = useSQLiteContext();
     const { list,initialized , refresh} = useSettlement(db);
-    const { list,initialized , refresh} = useSettlementStore();
+    const { listStore , groupAdd} = useSettlementStore();
+
+    console.log('listStore', listStore)
+    console.log('groupAdd', groupAdd)
         
     // 📌 합계 계산
     const totalAmount = useMemo(() => {
@@ -227,7 +230,9 @@ export default function SettlementListScreen() {
                 </Text>
                 
                 <View className="space-y-4 pb-20">
-                {list.map((m) => (
+                    
+                {listStore.map((m) => (
+                // {list.map((m) => (
                     <View
                         key={m.id}
                         className="bg-[#0F2C63] p-4 rounded-2xl border border-[#223B7F]"
