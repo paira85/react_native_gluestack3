@@ -96,8 +96,6 @@ export default function SettlementFormScreen() {
         compareShop,
         group_id,
       };
-      console.log('id' , id)
-      console.log('newItem' , newItem)
       update(id, newItem);
     }else{
       for (let item of items) {
@@ -167,7 +165,6 @@ export default function SettlementFormScreen() {
     }
     
   }
-
 
   return (
     <Box className="flex-1 bg-[#071B3B] px-5 pt-5 pb-40">

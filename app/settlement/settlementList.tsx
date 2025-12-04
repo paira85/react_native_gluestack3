@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {  FlatList,  Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native";
 import { Box } from "@/components/ui/box";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { Divider } from "@/components/ui/divider";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SettlementItem from "@/components/settlement/SettlmementModal";
@@ -23,21 +23,19 @@ export default function SettlementListScreen() {
 
     const [selected, setSelected] = useState(0);
     const [groupSelected, setGroupSelected] = useState(0);
-
     const groupData = groupStroe.filter(item => String(item.id) === String(groupSelected))
     const [modalVisible , setModalVisible] = useState(false)
+
+    console.log('groupData' , groupData)
         
     // 📌 합계 계산
     // const totalAmount = useMemo(() => {
     //     return list.reduce((sum, x) => sum + Number(x.amount || 0), 0);
     // }, [list]);
 
-    console.log('selected' , selected)
-    console.log('selected' , listStore)
 
     const selectList = listStore.filter( m => String(m.group_id) === String(selected))
     
-    console.log('selectList' , selectList)
     const totalAmount = useMemo(() => {
         // return selectList.reduce(
         //     (sum, x) => ({
@@ -59,7 +57,6 @@ export default function SettlementListScreen() {
         );
     }, [selectList ]);
 
-    console.log('totalAmount' , totalAmount)
     // const [state, set] = useState({ list: [], initialized: false });
    
     useEffect( ()=>{
@@ -84,12 +81,22 @@ export default function SettlementListScreen() {
         // };
 
         // init();  
-        console.log('groupSelected' , groupSelected)
         if(! groupSelected){
-            setGroupSelected(groupStroe[0].id)
+            setGroupSelected(groupStroe[0]?.id)
+            setSelected(groupStroe[0]?.id)
         }
 
     },[])
+
+
+    useFocusEffect(
+        useCallback(() => {
+        if(! groupSelected){
+            console.log('useCallback' , groupStroe)
+            setGroupSelected(groupStroe[0]?.id)
+        }
+        }, [])
+    );
 
 
 
