@@ -11,7 +11,21 @@ import {
     MailIcon
 }
     from 'lucide-react-native';
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+
+
+function generateDays(start, end) {
+  const s = new Date(start);
+  const e = new Date(end);
+  const days = [];
+
+  while (s <= e) {
+    days.push(s.toISOString().split("T")[0]);
+    s.setDate(s.getDate() + 1);
+  }
+  return days;
+}
 
 export default function ScheduleResult() {
   const { startDate, endDate, datas } = useRoute().params;
@@ -26,16 +40,7 @@ export default function ScheduleResult() {
   // for( var key in datas){
   //   console.log('key ' , datas [key])
   // }
-
-  console.log('result datas' , datas)
-
   const setModalData = ( key,lists) =>{
-    console.log('setModalData start')
-    console.log('key',key)
-    console.log('key',lists)
-
-    console.log('setModalData emd')
-
     const data = {
       "day":key,
       "datas":lists
@@ -54,8 +59,7 @@ export default function ScheduleResult() {
 
   const setRemoveData = (day , item) =>{
     // const ids = datas.filter(item => item.id != data.id);
-    console.log('removeids ', day)
-    console.log('removeids ', item.id)
+
     let deletedId = item.id
     setList(prev => ({
       ...prev,
@@ -64,6 +68,7 @@ export default function ScheduleResult() {
 
     // console.log('setRemoveData',data.id)
   }
+  console.log(Object.entries(list))
 
   return (
     <ScrollView className="flex-1 bg-gray-50 px-5 pt-14">
@@ -106,7 +111,7 @@ export default function ScheduleResult() {
 
 
       {/* DAY별 타임라인 */}
-      {Object.entries(list).map( ([key ,values], index)  => (
+      {Object.entries(list).map( ([key ,values=[]], index)  => (
         <View key={index} className="mb-5 bg-gray-200  ">
           <View className="flex-row w-full justify-between px-3 py-2  "> 
             <Text className="font-bold mb-3  text-base ">
@@ -117,30 +122,37 @@ export default function ScheduleResult() {
                setModalData(key,values)}}/>
           </View>
 
-          {values.map((item, i) => (
-            <View key={i} className="flex-row">
-              {/* Time */}
-              <View className="w-16">
-                <Text className="text-gray-600 font-medium text-center text-base">{i+1}</Text>
-              </View>
+          {values?.length > 0 ? (
+            values.map((item, i) => (
+              <View key={i} className="flex-row">
+                {/* Time */}
+                <View className="w-16">
+                  <Text className="text-gray-600 font-medium text-center text-base">{i+1}</Text>
+                </View>
 
-              {/* Timeline Line */}
-              <View className="items-center mr-4">
-                <View className="w-3 h-3 rounded-full bg-pink-500" />
-                {i !== values.length - 1 && <View className="w-0.5 h-10 bg-gray-300" />}
-              </View>
+                {/* Timeline Line */}
+                <View className="items-center mr-4">
+                  <View className="w-3 h-3 rounded-full bg-pink-500" />
+                  {i !== values.length - 1 && <View className="w-0.5 h-10 bg-gray-300" />}
+                </View>
 
-              {/* Content Box */}
-              <View className="flex-1 bg-white p-4 rounded-2xl shadow mb-6 flex-row justify-between" >
-                <Text className="font-semibold text-gray-800">{item.name}</Text>
-                {/* <Text className="mt-1 text-gray-500">₩ {item.price.toLocaleString()}</Text> */}
-                <Feather name="minus-circle" size={22} color="black" onPress={(e) =>{ 
-                  e.stopPropagation();  
-                  setRemoveData(key,item)
-                }}/>
+                {/* Content Box */}
+                <View className="flex-1 bg-white p-4 rounded-2xl shadow mb-6 flex-row justify-between" >
+                  <Text className="font-semibold text-gray-800">{item.name}</Text>
+                  {/* <Text className="mt-1 text-gray-500">₩ {item.price.toLocaleString()}</Text> */}
+                  <Feather name="minus-circle" size={22} color="black" onPress={(e) =>{ 
+                    e.stopPropagation();  
+                    setRemoveData(key,item)
+                  }}/>
+                </View>
               </View>
-            </View>
-          ))}
+            ))
+            ) : (
+              <Text className="text-gray-400 px-1 text-sm">
+                등록된 일정이 없습니다.
+              </Text>
+            )
+          }
         </View>
       ))}
 

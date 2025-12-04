@@ -31,6 +31,7 @@ import { VStack } from '@/components/ui/vstack';
 import EnjoiList from '@/components/enjoi/EnjoiList';
 import { router, useLocalSearchParams } from 'expo-router';
 import RootNavigation from '../navigate';
+import CommunityCard from '@/components/board/communutyCard';
 
 export default function MainLayout() {
   const bannerData = [
@@ -58,6 +59,7 @@ export default function MainLayout() {
   const [enjoiTabIndex , setEnJoiTabIndex] = useState<Number>(0)
   console.log('enjoiTabIndex ' , enjoiTabIndex)
 
+  const [communityType,setCommunityType] = useState("일반")
 
   //[에스레포츠] : http://www.sleports.com/
 
@@ -127,12 +129,45 @@ export default function MainLayout() {
                 </Box>
               </Box>
               
-               <EnjoiList 
+              <EnjoiList 
                   fnTabIndex={setEnJoiTabIndex}  
                   index={enjoiTabIndex} 
                 />   
-                               
+
+
+              <Box className="bg-white pt-6 px-4 mb-3">
+                {/* 1줄 */}
+                <Box className="flex-row gap-4">
+                  <Text>추천명소1</Text>
+                  <Text>추천장소2</Text>
+                </Box>
+              </Box>
+
+
+              <View className="pt-10 px-5 mb-3 ">
+                <View className="flex-row  justify-around gap-4">
+                    <Pressable onPress={()=>{
+                        // router.push({
+                        //     pathname: "../board/community",
+                        //     params: { }
+                        // })
+                        setCommunityType("일반")
+                    }}><Text>커뮤니티</Text></Pressable>
+                     <Pressable onPress={()=>{
+                        // router.push({
+                        //     pathname: "../board/community",
+                        //     params: { }
+                        // })
+                        setCommunityType("공지")
+                    }}><Text>공지</Text>
+                    </Pressable>
+                </View>
+              </View>       
+              <View >
+                <CommunityCard data={{type:communityType}} />
+              </View>
             </Box>
+
             <Divider className="bg-primary-500" />
             
         </Box>

@@ -1,75 +1,117 @@
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Pressable, Image } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import {
     initScheduleDB,
     getScheduleRows,
-    insertSchedule
+    insertSchedule,
+    deleteSchedule
 } from "../../db/scheduleDB";
-
+import { Box } from "@/components/ui/box";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Fab } from "@/components/ui/fab";
+import {
+  Heart,
+  MoreVertical,
+  Calendar,
+  Search,
+  MapPin,
+  MessageCircle,
+  User,
+  Plus,
+} from "lucide-react-native";
+import { Icon } from "@/components/ui/icon";
+import { HStack } from "@/components/ui/hstack";
+import { VStack } from "@/components/ui/vstack";
+import TripCardCurrent from "@/components/trip/TripCardCurrent";
+import TripCardCompleted from "@/components/trip/TripCardComplate";
 
 export default function ListScreen({ }) {
-    const [trips, setTrips] = useState([]);
-    const [list, setList] = useState<any[]>([]);
+    const [trips, setTrips] = useState<any[]>([]);
 
     const navigation = useNavigation();
 
     const db = useSQLiteContext();
-    const init = initScheduleDB(db);
+    // const init = initScheduleDB(db);
 
 
     useEffect(() => {
-        const init = initScheduleDB(db);
-        const rows = getScheduleRows(db);
-        console.log(rows)
-        setTrips(rows)
-        setList(rows)
+        const init = async () => {
+          
+            const init = await initScheduleDB(db);
+            const rows = await  getScheduleRows(db);
+            setTrips(rows)
+        };
+        init();
+        
     }, [])
 
+    
+    const deleteItem = async(id)=>{
+        await deleteSchedule(db, id)
+        const rows = await  getScheduleRows(db);
+        setTrips(rows)
+    }
+
     return (
-        <View style={{ flex: 1, padding: 20 }}>
-            <Text style={{ fontSize: 22, fontWeight: "bold" }}>예정된 여행</Text>
+        <Box className="flex-1 ">
+            <SafeAreaView style={{ flex: 1 }}>
+                <Box className="flex-1">
+                {/* 상단 영역 */}
+                <ScrollView
+                    contentContainerStyle={{ paddingBottom: 120 }}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {/* 화면 제목 */}
+                    <Box className="px-5 pt-4">
+                    <Text className="text-xl font-extrabold  leading-tight">
+                        나의 여행
+                    </Text>
+                    </Box>
 
-            <ScrollView>
-                {trips.map((trip) => (
-                    <TouchableOpacity
-                        key={trip.id}
-                        onPress={() =>
-                            navigation.navigate("EditScreen", { travelId: trip.id })
-                        }
-                        style={{
-                            backgroundColor: "white",
-                            padding: 15,
-                            borderRadius: 12,
-                            marginVertical: 10,
-                        }}
-                    >
-                        <Text style={{ fontSize: 20 }}>{trip.title}</Text>
-                        <Text style={{ marginTop: 5 }}>
-                            {trip.startDate} ~ {trip.endDate}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
+                    {/* 진행 중 여행 카드 */}
+                    <Box className="mt-5 px-5 gap-3">
+                        {trips.map((trip) => (                        
+                        <TripCardCurrent trip={trip} key={trip.id} deleteItem={deleteItem} />
+                        ))}
+                    </Box>
+                    
 
-            {/* + 버튼 */}
-            <TouchableOpacity
-                onPress={() => navigation.navigate("schedule/index")}
-                style={{
-                    position: "absolute",
-                    right: 20,
-                    bottom: 20,
-                    width: 60,
-                    height: 60,
-                    borderRadius: 30,
-                    backgroundColor: "#00c2a8",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
-                <Text style={{ fontSize: 32, color: "white" }}>+</Text>
-            </TouchableOpacity>
-        </View>
+                    {/* 완료된 여행 섹션 */}
+                    <Box className="mt-10 px-5">
+                    <Text className="mb-4 text-lg font-extrabold ">
+                        완료된 여행
+                    </Text>
+
+                    {trips.map((trip) => (
+                        <Box key={trip.id} className="mb-4">
+                            <TripCardCompleted trip={trip} />
+                        </Box>
+                    ))}
+                    </Box>
+                </ScrollView>
+
+                {/* 플로팅 추가 버튼 */}
+                <Fab
+                    placement="bottom right"
+                    className="mb-20 mr-6 h-16 w-16 rounded-full bg-white"
+                     onPress={()=>{
+                        router.push({
+                            pathname: "schedule/",
+                            params: { }
+                        })
+                    }}
+                >
+                    <Icon as={Plus} className="h-7 w-7 text-black" />
+                </Fab>
+
+                {/* 하단 탭바 */}
+                {/* <BottomTabBar /> */}
+                </Box>
+            </SafeAreaView>
+        </Box>
+        
+        
     );
 }

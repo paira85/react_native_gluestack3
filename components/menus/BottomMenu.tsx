@@ -40,7 +40,7 @@ export default function BottomMenu() {
             <Pressable
                 onPress={()=>{                    
                     router.push({
-                        pathname: "/schedule",
+                        pathname: "/schedule/scheduleList",
                     })
                 }}>
                 <Text className="text-green-600 mt-1 font-bold">MyData</Text>
