@@ -23,6 +23,7 @@ export default function SettlementListScreen() {
 
     const [selected, setSelected] = useState(0);
     const [groupSelected, setGroupSelected] = useState(0);
+
     const groupData = groupStroe.filter(item => String(item.id) === String(groupSelected))
     const [modalVisible , setModalVisible] = useState(false)
         
@@ -61,7 +62,7 @@ export default function SettlementListScreen() {
     console.log('totalAmount' , totalAmount)
     // const [state, set] = useState({ list: [], initialized: false });
    
-    // useEffect( ()=>{
+    useEffect( ()=>{
         // console.log('SettlementListScreen useEffect')
         
         // 안드로이드용
@@ -82,8 +83,13 @@ export default function SettlementListScreen() {
         //     setList(rows);
         // };
 
-        // init();
-    // },[])
+        // init();  
+        console.log('groupSelected' , groupSelected)
+        if(! groupSelected){
+            setGroupSelected(groupStroe[0].id)
+        }
+
+    },[])
 
 
 
@@ -92,16 +98,17 @@ export default function SettlementListScreen() {
             <ScrollView className="flex-1 bg-[#0B1C3F] px-5 pt-4">
                 {/* Back Button */}
                 <View className="flex-row items-center mb-4">
-                    <Ionicons name="chevron-back" size={24} color="white"  onPress={() => {
-                                router.push({
-                                       pathname: '../',
-                                       params: {
-                                           
-                                       }
-                                   })
+                    <Ionicons name="chevron-back" size={24} color="white"  
+                        onPress={() => {
+                            router.push({
+                                    pathname: '../',
+                                    params: {
+                                        
+                                    }
+                                })
                             }
                         }
-                        />
+                    />
                     <Text className="text-white text-xl font-semibold ml-2">
                     정산 내역
                     </Text>
@@ -132,49 +139,65 @@ export default function SettlementListScreen() {
 
                 {/* Summary Card */}
                 <View className="bg-[#0F2C63] p-4 rounded-2xl mb-6">
-                    <Text className="text-lg text-white font-semibold mb-3">
-                        {groupData.length > 0  && groupData[0].groupName}
-                    </Text>
 
-                    <View className="flex-row justify-between mb-1">
-                        <Text className="text-gray-300">총 지출</Text>
-                        <Text className="text-yellow-300 font-semibold">
-                            {totalAmount.pay}원
+                    <TouchableOpacity
+                        className="py-2"
+                        onPress={() => 
+                            router.push({
+                                pathname: "/settlement/settlementForm",
+                                params: {
+                                    group_id : groupData[0]?.id, 
+                                    type:"group",
+                                    id :""
+
+                                }
+                            })
+                        }
+                        >
+                        <Text className="text-lg text-white font-semibold mb-3">
+                            {groupData.length > 0  && groupData[0].groupName}
                         </Text>
-                    </View>
 
-                    <View className="flex-row justify-between mb-1">
-                        <Text className="text-gray-300">참여 인원</Text>
-                        <Text className="text-yellow-300 font-semibold">
-                            {groupData.length > 0  && groupData[0].members}명
-                        </Text>
-                    </View>
+                        <View className="flex-row justify-between mb-1">
+                            <Text className="text-gray-300">총 지출</Text>
+                            <Text className="text-yellow-300 font-semibold">
+                                {totalAmount.pay}원
+                            </Text>
+                        </View>
 
-                   
+                        <View className="flex-row justify-between mb-1">
+                            <Text className="text-gray-300">참여 인원</Text>
+                            <Text className="text-yellow-300 font-semibold">
+                                {groupData.length > 0  && groupData[0].members}명
+                            </Text>
+                        </View>
 
-                    <View className="flex-row justify-between mt-3">
-                        <Text className="text-red-500 font-semibold">미정산 금액</Text>
-                        <Text
-                            className={`font-bold text-red-500`}
-                        >    {totalAmount.need}원
-                        </Text>
-                    </View>
-
-                    <View className="flex-row justify-between mb-2">
-                        <Text className="text-gray-300">1인당 부담액</Text>
-                        <Text className="text-yellow-300 font-semibold"> 
-                            {totalAmount.per}원
-                        </Text>
-                    </View>
                     
 
-                    <View className="flex-row justify-between mb-3">
-                        <Text className="text-gray-300">정산 완료</Text>
-                        <Text className="text-yellow-300 font-semibold">
-                            {totalAmount.complate}/{totalAmount.total}건
-                        </Text>
-                    </View>
+                        <View className="flex-row justify-between mt-3">
+                            <Text className="text-red-500 font-semibold">미정산 금액</Text>
+                            <Text
+                                className={`font-bold text-red-500`}
+                            >    {totalAmount.need}원
+                            </Text>
+                        </View>
 
+                        <View className="flex-row justify-between mb-2">
+                            <Text className="text-gray-300">1인당 부담액</Text>
+                            <Text className="text-yellow-300 font-semibold"> 
+                                {totalAmount.per}원
+                            </Text>
+                        </View>
+                        
+
+                        <View className="flex-row justify-between mb-3">
+                            <Text className="text-gray-300">정산 완료</Text>
+                            <Text className="text-yellow-300 font-semibold">
+                                {totalAmount.complate}/{totalAmount.total}건
+                            </Text>
+                        </View>
+
+                    </TouchableOpacity>
                     <View className="flex-row space-x-3 mt-3">
                         <TouchableOpacity className="flex-1 bg-yellow-300 py-3 rounded-xl"
                             onPress={ () => setModalVisible(true)}
@@ -202,8 +225,24 @@ export default function SettlementListScreen() {
                 {listStore && listStore
                     .filter(m => String(m.group_id) === String(selected))
                     .map((m) => (
+
+                        <TouchableOpacity
+                        key={m.id}
+                        className="py-2"
+                        onPress={() => 
+                            router.push({
+                                pathname: "/settlement/settlementForm",
+                                params: {
+                                    group_id : groupData[0]?.id, 
+                                    type:"list",
+                                    id :m.id
+
+                                }
+                            })
+                        }
+                        >
                         <View
-                            key={m.id}
+                            
                             className="bg-[#0F2C63] p-4 rounded-2xl border border-[#223B7F]"
                         >
                             {/* Profile Row */}
@@ -249,6 +288,7 @@ export default function SettlementListScreen() {
                                 </Text>
                             </View>
                         </View>
+                        </TouchableOpacity>
                     )
                    
                     )}
