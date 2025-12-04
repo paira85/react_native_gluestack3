@@ -1,12 +1,34 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { Calendar } from "react-native-calendars";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useSQLiteContext } from "expo-sqlite";
+import {
+  initScheduleDB,
+  getScheduleRows,
+  insertSchedule
+} from "../../db/scheduleDB";
+import { userSchedule } from "@/hook/useSchedule";
+
+function generateDays(start, end) {
+  const s = new Date(start);
+  const e = new Date(end);
+  const days = [];
+
+  while (s <= e) {
+    days.push(s.toISOString().split("T")[0]);
+    s.setDate(s.getDate() + 1);
+  }
+  return days;
+}
 
 export default function ScheduleAddRange() {
   const navigation = useNavigation();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const db = useSQLiteContext();
+  const init = initScheduleDB(db);
 
   const onDayPress = (day) => {
     const selected = day.dateString;
@@ -72,6 +94,24 @@ export default function ScheduleAddRange() {
     return marks;
   };
 
+  useEffect(()=>{
+    const init = initScheduleDB(db);
+    const rows = getScheduleRows(db);
+    console.log('init')
+    console.log('rows' , rows)
+  },[]  )
+
+
+  
+  const saveTrip = async () => {
+    const title = "여행"; // 자동 제목 or 수정 가능
+    // 날짜 자동 생성 & 저장
+    const days = generateDays(startDate, endDate);
+    console.log('days', days)
+    const result = await insertSchedule(db,'test','test','2025-12-04','2025-12-04')
+
+  };
+
   return (
     <View className="flex-1 bg-white px-5 pt-14">
       <Text className="text-2xl font-bold text-gray-800 mb-4">언제 떠나세요?</Text>
@@ -100,7 +140,10 @@ export default function ScheduleAddRange() {
       {/* 다음 버튼 */}
       <TouchableOpacity
         disabled={!startDate || !endDate}
-        onPress={() => navigation.navigate("schedule/scheduleSelect", { startDate, endDate })}
+        onPress={() => 
+          // navigation.navigate("schedule/scheduleSelect", { startDate, endDate })
+          saveTrip()
+        }
         className={`mt-10 py-4 rounded-xl ${
           startDate && endDate ? "bg-blue-700" : "bg-gray-300"
         }`}
