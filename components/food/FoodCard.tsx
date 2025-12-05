@@ -16,8 +16,8 @@ export default function FoodCard({ food } : Props) {
     if (!food ) return null;
     
     return (
-        <View className="mt-3 mb-2 rounded-2xl  shadow-sm overflow-hidden">
-            <View className="py-4">
+        <View className="w-[100%] mb-3 rounded-3xl mx-auto shadow-md bg-white px-3">
+            <View className="py-4 ">
                 <Text className="text-base mb-1 font-semibold">{food.title}</Text>
                 <View className="flex-row items-center mt-2 gap-2">                    
                     <Text className="text-base">{food.category}</Text>

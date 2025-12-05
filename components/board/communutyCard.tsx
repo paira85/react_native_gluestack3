@@ -99,7 +99,7 @@ export default function CommunityCard({ data }: Props) {
     <Box className="flex-1">
       
       {/* 게시물 리스트 */}
-      <ScrollView showsVerticalScrollIndicator={false} className="mt-4 px-4 pb-20">
+      <ScrollView showsVerticalScrollIndicator={false} className="mt-4 px-4">
         {filtered.map((item) => (
           <Box key={item.id} className="border-b border-gray-200 pb-4 mb-4">
             {/* 제목 */}

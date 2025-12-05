@@ -18,6 +18,9 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Image } from '@/components/ui/image';
 import { Dimensions } from 'react-native';
+import ServicesCard from '@/components/service/ServiceCard';
+import ReviewCard from '@/components/review/ReviewCard';
+import TagsCard from '@/components/tag/TagsCard';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -80,6 +83,23 @@ export default function SurfCardDetail() {
     );
     console.log('detail',detail)
 
+
+    const data = {
+       services: [
+    { icon: "dog-side", label: "반려동물" },
+    { icon: "sofa", label: "휴식석" },
+    { icon: "parking", label: "주차" },
+    { icon: "food-takeout-box", label: "테이크아웃" },
+    { icon: "human-male-female", label: "화장실" },
+    { icon: "wifi", label: "와이파이" },
+    { icon: "baby-carriage", label: "키즈존" },
+    { icon: "smoking-off", label: "금연" },
+  ],
+        reviewScore: 5.0,
+        reviewCount: 2,
+        tags: ["카페", "음료", "커피", "디저트", "라떼", "에이드", "바다지기라떼"],
+    };
+
     return (
         <SafeAreaView className="bg-white flex-1" >
         <ScrollView className="flex-1" contentContainerStyle={{ flexGrow: 1 }}>
@@ -123,6 +143,19 @@ export default function SurfCardDetail() {
                     </Text>
                 </View>
             </Box>                
+
+             {/* 제공 서비스 카드 */}
+            <ServicesCard services={data.services} />
+
+            {/* 리뷰 카드 */}
+            <ReviewCard
+                score={data.reviewScore}
+                count={data.reviewCount}
+                onWrite={() => router.push("/writeReview")}
+            />
+
+            {/* 태그 카드 */}
+            <TagsCard tags={data.tags} />
             <Footer />   
         </ScrollView>
         </SafeAreaView>

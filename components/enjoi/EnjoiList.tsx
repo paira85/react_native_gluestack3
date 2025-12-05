@@ -71,7 +71,7 @@ export default function EnjoiList ({fnTabIndex,index } : Props) {
         <>
         {/* "즐기는 양양" 섹션 */}
         <Box className="px-4 mt-4">
-            <Text className="text-[22px] font-extrabold text-black mb-2">
+            <Text className="text-[20px] font-extrabold text-black mb-2">
                 즐기는 인제
             </Text>
 
@@ -119,7 +119,7 @@ export default function EnjoiList ({fnTabIndex,index } : Props) {
                     >
                     <Box
                         key={item.title}
-                        className="bg-white rounded-3xl mr-4 shadow-sm"
+                        className="bg-white mx-auto mb-5 rounded-2xl mr-3 shadow-md gap-2"
                         style={{ width: 260 }}
                     >
                         {/* 이미지 */}
