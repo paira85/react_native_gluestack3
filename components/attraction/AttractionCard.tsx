@@ -4,21 +4,21 @@ export default function AttractionCard({ item, onPress }: any) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="w-full w-[320px] relative  mx-auto mb-5 bg-white rounded-2xl shadow-md gap-2 mr-2"
+      className="relative  mx-auto mb-5 bg-white rounded-2xl shadow-md gap-2 mr-2"
       activeOpacity={0.8}
     >
-        <View className="py-2 px-2 h-48 rounded-3xl overflow-hidden ">
+        <View className="py-2 px-2 h-48 rounded-3xl overflow-hidden relative">
             <Image
                 // source={{ uri: item.image }}
                 source={item.image }
-                className="w-full h-full "        
+                className="w-full h-full w-[340px] "        
                 resizeMode="cover"
                 alt="card" 
             />
         </View>
 
-{/* 타이틀 오버레이 */}
-        <View className="absolute w-full pb-2 px-3  items-center justify-center inset-0 ">
+        {/* 타이틀 오버레이 */}
+        <View className="absolute items-center justify-center inset-0 ">
             <Text
             className="text-center text-white text-1xl font-bold mb-2"
             style={{

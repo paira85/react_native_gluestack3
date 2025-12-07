@@ -260,8 +260,9 @@ export default function MainLayout() {
                       className="w-full"
                   >
                   {
-                  actionDatas.map((item) => (
+                  actionDatas.map((item , idx) => (
                     <AttractionCard
+                        key={idx}
                         item={item}
                         onPress={() => 
                             navigation.navigate("attraction/attractionDetail", { item })
@@ -274,15 +275,19 @@ export default function MainLayout() {
               </Box>
 
 
-              <View className=" bg-white pt-6 px-4 mb-3">
+              <View className=" bg-white pt-6 px-4 mb-3 ">
                 <Text className="text-[20px] font-extrabold text-black mb-2">
                     추천장소(핫)
                 </Text>
                   <FlatList
                     data={foodDatas}
+                    horizontal
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderFoodItem}
-                    showsVerticalScrollIndicator={false}
+                    // showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 16 }}
+                    
                   />
                   
               </View>   

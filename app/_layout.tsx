@@ -17,7 +17,7 @@ import { MoonIcon, SunIcon } from '@/components/ui/icon';
 import RootNavigation from './navigate';
 import { SQLiteProvider } from "expo-sqlite";
 import { InitDBWrapper } from '@/hook/InitDBWrapper';
-
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -57,6 +57,7 @@ function RootLayoutNav() {
   // useInitDB();  
 
   return (
+     <GestureHandlerRootView style={{ flex: 1 }}>
       <GluestackUIProvider mode={colorMode}>
         <ThemeProvider value={colorMode === 'dark' ? DarkTheme : DefaultTheme}>
           
@@ -74,5 +75,6 @@ function RootLayoutNav() {
           )}
         </ThemeProvider>
       </GluestackUIProvider>
+      </GestureHandlerRootView>
   );
 }
