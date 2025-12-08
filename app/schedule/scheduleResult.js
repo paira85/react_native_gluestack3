@@ -122,6 +122,25 @@ export default function ScheduleResult() {
     }
   };
 
+  const saveTrip = () =>{
+    console.log('list' , list)
+
+    const flatArray = [];
+
+    list.forEach(([date, items]) => {
+      items.forEach(item => {
+        flatArray.push({
+          date,
+          id: item.id,
+          name: item.name,
+          img: item.img ?? null
+        });
+      });
+    });
+
+    console.log(flatArray);
+
+  }
 
   return (
     <ScrollView className="flex-1 bg-gray-50 px-5 pt-14" dataSet={{ id: "mySchedule" }}>
@@ -228,6 +247,11 @@ export default function ScheduleResult() {
       <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={exportPDF}>
         <Text className="text-center text-white font-bold text-lg">PDF 저장</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={saveTrip}>
+        <Text className="text-center text-white font-bold text-lg">저장</Text>
+      </TouchableOpacity>
+
 
     </ScrollView>
 

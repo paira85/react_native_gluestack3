@@ -1,5 +1,6 @@
 // services/settlement.ts
 export async function initScheduleDB(db: any) {
+  await db.execAsync(`drop table Schedule`)
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS Schedule (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -7,9 +8,29 @@ export async function initScheduleDB(db: any) {
         memo TEXT,
         startDate TEXT,
         endDate TEXT,
-        created_at date
+        nights INTEGER,
+        days INTEGER,
+        peopleCount INTEGER,
+        created_at date,
+        updated_At date
+
     );
   `);
+
+   await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS Trip_Schedule (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tripId TEXT,
+        day INTEGER,
+        date TEXT,
+        orderNo INTEGER,
+        title TEXT,
+        placeId TEXT,
+        memo TEXT,
+        created_at date, 
+        updated_at date
+      );
+    `);
 }
 
 
@@ -23,10 +44,44 @@ export async function insertSchedule(
 ) {
   const createdAt = new Date().toISOString();
   await db.runAsync(
-    "INSERT INTO Schedule (title, memo, startDate, endDate , created_at) VALUES (?, ?, ?, ?, ?)",
-    [title, memo, startDate, endDate,  createdAt]
+    "INSERT INTO Schedule (title, memo, startDate, endDate , created_at , updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+    [title, memo, startDate, endDate,  createdAt , createdAt]
   );
 }
+
+// INSERT
+export async function insertTripSchedule(
+  db: any,
+  tripId: string,
+  day:string,
+  date: string,
+  orderNo: string,
+  title: string,
+  placeId: string,
+  memo: string
+) {
+
+  const createdAt = new Date().toISOString();
+  await db.runAsync(
+    `  INSERT INTO Trip_Schedule 
+          (tripId, day, date, orderNo, title, placeId, memo , created_at , updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?)
+    `,
+     [
+        tripId,
+        day,
+        date,
+        orderNo,
+        title,
+        placeId,
+        memo,
+        createdAt,
+        createdAt,
+      ]
+  );
+}
+
+
 
 // SELECT ALL
 export async function getScheduleRows(db: any) {
