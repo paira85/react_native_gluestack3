@@ -4,10 +4,10 @@ export default function AttractionCard({ item, onPress }: any) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="relative  mx-auto mb-5 bg-white rounded-2xl shadow-md gap-2 mr-2"
+      className="relative flex-1  mb-5 bg-white rounded-2xl shadow-md gap-2"
       activeOpacity={0.8}
     >
-        <View className="py-2 px-2 h-48 rounded-3xl overflow-hidden relative">
+        <View className="py-2 px-2 h-48 rounded-3xl overflow-hidden relative w-full">
             <Image
                 // source={{ uri: item.image }}
                 source={item.image }

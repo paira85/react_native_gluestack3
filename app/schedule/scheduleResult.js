@@ -9,8 +9,13 @@ import {
   MailIcon
 }
   from 'lucide-react-native';
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFocusEffect } from "expo-router";
+import ViewShot, { captureRef } from "react-native-view-shot";
+import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system";
+import html2canvas from "html2canvas";
+
 // import ViewShot from "react-native-view-shot";
 // import * as FileSystem from "expo-file-system";
 // import { PDFDocument, PageSizes } from 'pdf-lib';
@@ -37,6 +42,7 @@ export default function ScheduleResult() {
   const totalNights = Object.keys(datas).length;           // 2
 
   const [list, setList] = useState(datas);
+  const cardRef = useRef(null);
 
   // for( var key in datas){
   //   console.log('key ' , datas [key])
@@ -70,47 +76,78 @@ export default function ScheduleResult() {
     // console.log('setRemoveData',data.id)
   }
   console.log(Object.entries(list))
+
   const exportPDF = async () => {
+    try {
+      let uri = null;
 
-  };
+      if (Platform.OS === "web") {
+        // 웹 캡처
+        const element = document.querySelector('[data-id="mySchedule"]')
+        console.log('element' , element)
+        const canvas = await html2canvas(element);
+        uri = canvas.toDataURL("image/png");
 
-  const exportHTML = () => {
-    const html = document.getElementById("schedule-container").outerHTML;
-    const blob = new Blob([html], { type: "text/html" });
-    const file = new File([blob], "schedule.html", { type: "text/html" });
+        // 웹 다운로드 예시
+        const link = document.createElement("a");
+        link.href = uri;
+        link.download = "schedule.png";
+        link.click();
 
-    if (navigator.share) {
-      navigator.share({ files: [file], title: "여행 일정", text: "일정보내요" });
-    } else {
-      const url = URL.createObjectURL(blob);
-      window.open(url);
+        alert("저장 완료", "웹에서는 이미지 다운로드로 저장됩니다.");
+        return;
+      }
+
+
+      if (!(await Sharing.isAvailableAsync())) {
+        alert("공유 불가", "이 기기에서는 공유 기능을 사용할 수 없습니다.");
+        return;
+      }
+
+      uri = await captureRef(cardRef, {
+        format: "png",
+        quality: 1,
+      });
+
+      const saveUri = FileSystem.cacheDirectory + "schedule.png";
+      await FileSystem.copyAsync({ from: uri, to: saveUri });
+
+      await Sharing.shareAsync(saveUri, {
+        mimeType: "image/png",
+        dialogTitle: "일정 공유하기",
+      });
+    } catch (e) {
+      console.log(e);
+      alert("오류", "일정 공유 중 오류가 발생했습니다.");
     }
   };
 
+
   return (
-      <ScrollView className="flex-1 bg-gray-50 px-5 pt-14">
+    <ScrollView className="flex-1 bg-gray-50 px-5 pt-14" dataSet={{ id: "mySchedule" }}>
+      <ViewShot ref={cardRef} dataSet={{ id: "mySchedule" }} >
         {/* 상단 타이틀 영역 */}
-        <View className="flex-row justify-between items-center mb-5">
+        <View className="flex-row justify-between items-center mb-5" >
           <Text className="text-2xl font-bold">내 일정</Text>
         </View>
 
         {/* <View className="flex-row w-full justify-between px-3 py-2  "> 
-        <Text>✨ {startDate} 부터 총 {totalDays}박 {totalNights}일</Text>
-        
-        <Ionicons name="create-outline" size={24} color="#444" />
-      </View> */}
+          <Text>✨ {startDate} 부터 총 {totalDays}박 {totalNights}일</Text>
+          
+          <Ionicons name="create-outline" size={24} color="#444" />
+        </View> */}
 
         {/* 지출 금액 요약 */}
         {/* <View className="bg-white p-4 rounded-2xl shadow mb-6">
-        <View className="flex-row justify-between mb-2">
-          <Text className="font-semibold text-gray-700">총 지출금</Text>
-          <Text className="font-bold text-lg text-pink-600">₩ 287,000</Text>
-        </View>
-        <View className="flex-row justify-between">
-          <Text className="text-gray-500">개인 지출</Text>
-          <Text className="font-semibold text-gray-700">₩ 287,000</Text>
-        </View>
-      </View> */}
+          <View className="flex-row justify-between mb-2">
+            <Text className="font-semibold text-gray-700">총 지출금</Text>
+            <Text className="font-bold text-lg text-pink-600">₩ 287,000</Text>
+          </View>
+          <View className="flex-row justify-between">
+            <Text className="text-gray-500">개인 지출</Text>
+            <Text className="font-semibold text-gray-700">₩ 287,000</Text>
+          </View>
+        </View> */}
 
         <View className="bg-white p-4 rounded-2xl shadow mb-6">
           <View className="flex-row w-full justify-between px-3 py-2  ">
@@ -173,31 +210,26 @@ export default function ScheduleResult() {
             }
           </View>
         ))}
+      </ViewShot>
+      <ScheduleModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        data={modifyData}
+        onSubmit={(day, ids) => {
+          console.log('selectedDay', day)
+          console.log('selectedids', ids)
+          setCallback(day, ids);
+          setModalVisible(false);
+        }}
+      />
 
 
-        <ScheduleModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          data={modifyData}
-          onSubmit={(day, ids) => {
-            console.log('selectedDay', day)
-            console.log('selectedids', ids)
-            setCallback(day, ids);
-            setModalVisible(false);
-          }}
-        />
 
+      <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={exportPDF}>
+        <Text className="text-center text-white font-bold text-lg">PDF 저장</Text>
+      </TouchableOpacity>
 
+    </ScrollView>
 
-        <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={exportPDF}>
-          <Text className="text-center text-white font-bold text-lg">PDF 저장</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={exportHTML}>
-          <Text className="text-center text-white font-bold text-lg">HTML 링크 공유</Text>
-        </TouchableOpacity>
-
-      </ScrollView>
-    
   );
 }
