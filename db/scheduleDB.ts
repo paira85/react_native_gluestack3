@@ -1,6 +1,6 @@
 // services/settlement.ts
 export async function initScheduleDB(db: any) {
-  await db.execAsync(`drop table Schedule`)
+  // await db.execAsync(`drop table Schedule`)
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS Schedule (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,13 +40,17 @@ export async function insertSchedule(
   title: string,
   memo: string,
   startDate: string,
-  endDate: string
+  endDate: string,
+  days:string,
+  nights:string,  
+  peopleCount:string,
 ) {
   const createdAt = new Date().toISOString();
-  await db.runAsync(
-    "INSERT INTO Schedule (title, memo, startDate, endDate , created_at , updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-    [title, memo, startDate, endDate,  createdAt , createdAt]
+  const result = await db.runAsync(
+    "INSERT INTO Schedule (title, memo, startDate, endDate , nights , days , peopleCount , created_at , updated_at ) VALUES (?, ?, ?, ?,?,?,?, ?, ?)",
+    [title, memo, startDate, endDate,  nights , days , peopleCount  , createdAt , createdAt]
   );
+  return result;
 }
 
 // INSERT
@@ -87,6 +91,25 @@ export async function insertTripSchedule(
 export async function getScheduleRows(db: any) {
   return await db.getAllAsync("SELECT * FROM Schedule ORDER BY id DESC");
 }
+
+
+// SELECT ALL
+export async function getScheduleRowId(db: any , id:string) {
+  return await db.getFirstAsync("SELECT * FROM Schedule where id = ? ",[id]);
+}
+
+
+// SELECT ALL
+export async function getTripScheduleRowId(db: any , tripId:string) {
+  return await db.getAllAsync("SELECT * FROM Trip_Schedule where tripId = ? ",[tripId]);
+}
+
+// SELECT ALL
+export async function deleteTripSchedule(db: any , tripId:string) {
+  return await db.runAsync("DELETE FROM Trip_Schedule WHERE tripId = ?", [tripId]);
+}
+
+
 
 // UPDATE
 export async function updateSchedule(

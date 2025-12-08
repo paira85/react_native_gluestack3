@@ -17,12 +17,12 @@ import { Image } from 'react-native';
 
 export default function ScheduleModal( {visible , onClose , onSubmit, data : {day , datas} } : Props) {
     const places = [
-        { id: 1, name: "수산항 봉수대 전망대", img: require("/assets/images/background/1739799310256-13.jpg") },
-        { id: 2, name: "아이서프", img: require("/assets/images/background/1739799352351-15.jpg") },
-        { id: 3, name: "서프호랑", img: require("/assets/images/background/1739799352351-26.jpg") },
-        { id: 4, name: "힐링서프", img: require("/assets/images/background/1739799232079-25.jpg") },
-        { id: 5, name: "고성카페", img: require("/assets/images/background/1739799352351-27.jpg") },
-        { id: 6, name: "뷰카페", img: require("/assets/images/background/1739799352351-27.jpg") },
+        { id: 1, title: "수산항 봉수대 전망대", name: "수산항 봉수대 전망대", img: require("/assets/images/background/1739799310256-13.jpg") },
+        { id: 2, title: "아이서프", name: "아이서프", img: require("/assets/images/background/1739799352351-15.jpg") },
+        { id: 3, title: "서프호랑", name: "서프호랑", img: require("/assets/images/background/1739799352351-26.jpg") },
+        { id: 4, title: "힐링서프", name: "힐링서프", img: require("/assets/images/background/1739799232079-25.jpg") },
+        { id: 5, title: "고성카페", name: "고성카페", img: require("/assets/images/background/1739799352351-27.jpg") },
+        { id: 6, title: "뷰카페", name: "뷰카페", img: require("/assets/images/background/1739799352351-27.jpg") },
     ]
     const [selected, setSelected] = useState([]);
     

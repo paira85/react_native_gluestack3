@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Pressable } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -8,8 +8,14 @@ import {
   getScheduleRows,
   insertSchedule
 } from "../../db/scheduleDB";
+
+import { Icon } from '@/components/ui/icon';
 import { userSchedule } from "@/hook/useSchedule";
 import { router } from "expo-router";
+import {
+    ArrowLeftIcon,
+}
+from 'lucide-react-native';
 
 function generateDays(start, end) {
   const s = new Date(start);
@@ -27,9 +33,10 @@ export default function ScheduleAddRange() {
   const navigation = useNavigation();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
+  
   //설정하고 초기 세팅
   const [datas, setDatas] = useState([]);
+  const [peopleCount, setPeopleCount] = useState(1);
 
   const db = useSQLiteContext();
   const init = initScheduleDB(db);
@@ -110,15 +117,20 @@ export default function ScheduleAddRange() {
   
   const saveTrip = async () => {    
     // 날짜 자동 생성 & 저장
+
     const days = generateDays(startDate, endDate);
-    const result = await insertSchedule(db,title,memo,startDate ,endDate)
+
+    const totalDays = Object.keys(days).length - 1; // 3
+    const totalNights = Object.keys(days).length;   // 2
+    const result = await insertSchedule(db,title,memo,  startDate ,endDate, totalDays , totalNights , peopleCount )
+    console.log('result' , result.lastInsertRowId)
+    let groupId = result.lastInsertRowId
 
     const datas = days.reduce((acc, day) => {
       acc[day] = [];
       return acc;
     }, {});
-
-    navigation.navigate("schedule/scheduleResult", { startDate, endDate, datas })
+    navigation.navigate("schedule/scheduleResult", { groupId , startDate, endDate, datas })
 
   };
 
@@ -126,8 +138,16 @@ export default function ScheduleAddRange() {
   console.log('datas1111' , datas)
   return (
     <View className="flex-1 bg-white px-5 pt-14">
-      <Text className="text-xl font-bold text-gray-800 mb-4">언제 떠나세요?</Text>
+      <View className="flex-row items-center mb-5 gap-3" >
+        <Pressable className="w-8 bg-black h-8 rounded-full justify-center items-center "
+          onPress={ () => {                       
+              navigation.goBack()
+          }}>
+          <Icon as={ArrowLeftIcon}  className="text-white font-semibold "/>
+        </Pressable>
 
+        <Text className="text-xl font-bold text-gray-800 ">언제 떠나세요?</Text>
+      </View>
       <View className="bg-[#0F2C63] p-4 rounded-2xl mb-8">
           <Text className="text-gray-200 mb-1">여행 제목</Text>
           <TextInput
@@ -142,12 +162,19 @@ export default function ScheduleAddRange() {
           <TextInput
             value={memo}
             onChangeText={setMemo}
-            keyboardType="numeric"
-            placeholder="2"
             placeholderTextColor="#aaa"
             className="text-white bg-[#1A3B7A] px-3 py-2 rounded-xl mb-4"
           />
 
+          <Text className="text-gray-200 mb-1">여행 인원수</Text>
+          <TextInput
+            value={peopleCount}
+            onChangeText={setPeopleCount}
+            keyboardType="numeric"
+            placeholder="1"
+            placeholderTextColor="#aaa"
+            className="text-white bg-[#1A3B7A] px-3 py-2 rounded-xl mb-4"
+          />
       </View>
 
 

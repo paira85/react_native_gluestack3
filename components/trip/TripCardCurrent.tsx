@@ -42,7 +42,7 @@ interface Trip {
 export default function TripCardCurrent( { trip, deleteItem }: Props) {
     
   return (
-    <Pressable className="overflow-hidden rounded-3xl bg-">
+    <>
       {/* 이미지 영역 */}
       {/* <Box className="h-56 w-full bg-neutral-800">
     
@@ -111,6 +111,6 @@ export default function TripCardCurrent( { trip, deleteItem }: Props) {
           </Pressable>
         </HStack>
       </Box>
-    </Pressable>
+    </>
   );
 };
