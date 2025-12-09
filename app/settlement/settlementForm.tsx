@@ -5,12 +5,12 @@ import { Box } from "@/components/ui/box";
 import { Input, InputField } from '@/components/ui/input';
 import { router } from "expo-router";
 //실제 안드로이드 DB
-import { insertSettlement , updateSettlement , deleteSettlement}  from '@/db/settlementDB'
 import { useSettlement } from "@/hook/useSettlement";
 import { useSQLiteContext } from "expo-sqlite";
 //로컬 스토어
 import { useSettlementStore } from "../../store/settlementStore";
 import { Ionicons } from "@expo/vector-icons";
+import { initSettlementDB, insertSettlement , insertGroupSettlement  , getSettlementGroup,  getSettlementRow  , deleteSettlement , updateSettlement} from "@/db/settlementDB";
 
 export default function SettlementFormScreen() {
   const navigation = useNavigation();
@@ -19,22 +19,20 @@ export default function SettlementFormScreen() {
   const id = route.params?.id;
   const type = route.params?.type;
   
-
   //로컬 스토어
-  const { listStore , groupStroe , groupAdd , add,  update , remove } = useSettlementStore();
+  // const { listStore , groupStroe , groupAdd , add,  update , remove } = useSettlementStore();
   
 
   //안드로이드용
   const db = useSQLiteContext();  
   const { list } = useSettlement(db);
 
-  const existing = listStore.find((d) => String(d.id) === String(id));
-  const groupExisting = groupStroe.find((d) => String(d.id) === String(group_id));
-
-
+  // const existing = listStore.find((d) => String(d.id) === String(id));
+  // const groupExisting = groupStroe.find((d) => String(d.id) === String(group_id));
+  
   //신규
   const [groupName, setGroupName] = useState("");
-  const [members, setMembers] = useState("2");
+  const [members, setMembers] = useState("");
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("음식");
@@ -42,25 +40,45 @@ export default function SettlementFormScreen() {
   const [totalPay, setTotalPay] = useState("");
   const [perUser, setPerUser] = useState("");
   const [compareShop, setCompareShop] = useState("");
-
+  const [groupExisting, setGroupExisting ]= useState();
+  const [existing, setExisting ]= useState();
   const [items, setItems] = useState([]);
-
   const categories = ["음식", "교통", "숙박", "쇼핑", "관광", "기타"];
 
 
   //안드로이드용
   useEffect(()=>{
-    setGroupName(groupExisting?.groupName || "")
-    setMembers(groupExisting?.members || "")
+    const init = async () => {
+        await initSettlementDB(db);
+        const groupRows = await getSettlementGroup(db ,group_id );
+        console.log('groupRows' , groupRows)
+        setGroupExisting(groupRows)
+            
+        setGroupName(groupRows?.title || "")
+        setMembers(groupRows?.members || "")
 
-    setTitle(existing?.title)
-    setCategory(existing?.category)
-    setMemo(existing?.memo)
-    setTotalPay(existing?.pay)
-    setPerUser(existing?.per)
-    setCompareShop(existing?.compareShop)
+        const listRows = await getSettlementRow (db, id )
+        // const listRows = await getSettlementRowAndGroupId(db , groupRows[0].id);
+        console.log('listRows' , listRows)  
+        setExisting(listRows)
+        
+        setTitle(listRows?.title)
+        setCategory(listRows?.category)
+        setMemo(listRows?.memo)
+        setTotalPay(listRows?.pay)
+        setPerUser(listRows?.per)
+        setCompareShop(listRows?.compare_Shop)
+    };
+    init();
 
-  },[groupExisting , existing])
+    // setTitle(existing?.title)
+    // setCategory(existing?.category)
+    // setMemo(existing?.memo)
+    // setTotalPay(existing?.pay)
+    // setPerUser(existing?.per)
+    // setCompareShop(existing?.compareShop)
+
+  },[group_id , id])
 
 
   const  handleSave = async () => {
@@ -79,7 +97,10 @@ export default function SettlementFormScreen() {
     // 2. 항목들 저장 (루프)
 
     if (!groupExisting){
-      groupAdd(groupData);
+      // groupAdd(groupData);
+      const groupResult = await insertGroupSettlement(db, groupName ,members,0,0,0,Date.now())
+      group_id = groupResult.lastInsertRowId
+      console.log('group_id ' , group_id)
     }
 
     if (existing){
@@ -96,12 +117,15 @@ export default function SettlementFormScreen() {
         compareShop,
         group_id,
       };
-      update(id, newItem);
+      // update(id, newItem);
+      updateSettlement(db,category,title,memo,pay,per,compareShop, id)
     }else{
       for (let item of items) {
         item["group_id"] = group_id
         if (!existing){        
-          add(item);
+          // add(item);
+          console.log('item ' , item.group_id)
+          await insertSettlement(db,item.category,item.title,item.memo ,item.pay , item.per ,  item.compareShop , item.group_id)
         }        
       }
     }
@@ -120,6 +144,9 @@ export default function SettlementFormScreen() {
     const pay = parseFloat(totalPay);
     const per = perUser ? parseFloat(perUser) : pay / parseInt(members);
 
+    console.log('perUser' , perUser)
+    console.log('perUser' , pay)
+    console.log('perUser' , members)
     
     const newItem = {
       id: Date.now(),
@@ -145,8 +172,8 @@ export default function SettlementFormScreen() {
   const handleDelete = () =>{
     if (Platform.OS == "web"){
       if(confirm("삭제하시겠습니까?")){
-        remove(id)
-
+        // remove(id)
+        deleteSettlement(db,id)
         router.push({
             pathname: "/settlement/settlementList",
             params: {   }
@@ -174,7 +201,7 @@ export default function SettlementFormScreen() {
           <Ionicons name="chevron-back" size={24} color="white"  
                 onPress={() => {
                     router.push({
-                            pathname: '../',
+                            pathname: 'settlement/settlementList',
                             params: {
                                 
                             }
@@ -304,7 +331,7 @@ export default function SettlementFormScreen() {
           }
 
           
-          {existing && 
+          {existing &&  existing.complate !='true' &&
             <TouchableOpacity
               onPress={handleSave}
               className="bg-yellow-300 py-3 rounded-xl mt-2"
@@ -318,7 +345,7 @@ export default function SettlementFormScreen() {
           {existing && 
             <TouchableOpacity
               onPress={handleDelete}
-              className="bg-red py-3 rounded-xl mt-2 z-10"
+              className="bg-red-300 py-3 rounded-xl mt-2 z-10"
             >
               <Text className="text-center font-semibold text-[#071B3B]">
                 삭제 하기
