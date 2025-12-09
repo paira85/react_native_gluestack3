@@ -22,11 +22,11 @@ export default function AttractionDetailScreen({ }: any) {
   return (
     <SafeAreaView className="bg-white w-full h-full" >
     <ScrollView className="bg-white w-full h-full" contentContainerStyle={{ flexGrow: 1 }}>
-         <Pressable className="absolute top-5 left-5 w-8 h-8 rounded-full bg-white justify-center items-center z-20"
-          onPress={ () => {                       
-              navigation.goBack()
-          }}>
-          <Icon as={ArrowLeftIcon}  />
+      <Pressable className="absolute top-5 left-5 w-8 h-8 rounded-full bg-white justify-center items-center z-20"
+        onPress={ () => {                       
+            navigation.goBack()
+        }}>
+        <Icon as={ArrowLeftIcon}  />
       </Pressable>
       <Box className="w-full   relative ">
       {/* 넣고 안넣고 차이 */}

@@ -14,7 +14,6 @@ import { useFocusEffect, useNavigation } from "expo-router";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
-import html2canvas from "html2canvas";
 
 // import ViewShot from "react-native-view-shot";
 // import * as FileSystem from "expo-file-system";
@@ -28,9 +27,10 @@ import {
 } from "../../db/scheduleDB";
 import { useSQLiteContext } from "expo-sqlite";
 import {
-    ArrowLeftIcon
+  ArrowLeftIcon
 }
-from 'lucide-react-native';
+  from 'lucide-react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 function generateDays(start, end) {
@@ -91,7 +91,7 @@ export default function ScheduleResult() {
     // const ids = datas.filter(item => item.id != data.id);
 
     let deletedId = item.id
-    setList(prev => ({ 
+    setList(prev => ({
       ...prev,
       [day]: prev[day].filter(p => p.id !== deletedId)
     }));
@@ -121,8 +121,8 @@ export default function ScheduleResult() {
         acc[items.date].push(items)
         return acc;
       }, {});
-      
-      if(tripRows.length>0){
+
+      if (tripRows.length > 0) {
         console.log('result', result)
         setList(result)
       }
@@ -136,6 +136,7 @@ export default function ScheduleResult() {
       let uri = null;
 
       if (Platform.OS === "web") {
+        const html2canvas = (await import("html2canvas")).default;
         // 웹 캡처
         const element = document.querySelector('[data-id="mySchedule"]')
         console.log('element', element)
@@ -183,15 +184,15 @@ export default function ScheduleResult() {
     let days = 0;
     let order = 0;
 
-    await deleteTripSchedule(db , groupId)
+    await deleteTripSchedule(db, groupId)
     await db.withTransactionAsync(async () => {
-      for (let key in list) { 
+      for (let key in list) {
         days++
 
-        if(list[key].length < 1){
+        if (list[key].length < 1) {
           await insertTripSchedule(db, groupId, days, key, '', '', '', '')
-          console.log("저장완료") 
-        } 
+          console.log("저장완료")
+        }
 
         for (let j in list[key]) {
           order++;
@@ -205,7 +206,7 @@ export default function ScheduleResult() {
           //   // img: item.img.uri ?? null
           //   memo:''
           // });
-          await insertTripSchedule(db, groupId, days, key, order, item.title?item.title:item.memo, item.id, item.name)
+          await insertTripSchedule(db, groupId, days, key, order, item.title ? item.title : item.memo, item.id, item.name)
           console.log("저장완료")
         }
       }
@@ -217,35 +218,36 @@ export default function ScheduleResult() {
       acc[items.date].push(items)
       return acc;
     }, {});
-     
-    if(tripRows.length>0){
-      setList(result) 
+
+    if (tripRows.length > 0) {
+      setList(result)
     }
   }
 
   return (
-    <ScrollView className="flex-1 bg-gray-50 px-5 pt-14" dataSet={{ id: "mySchedule" }}>
-      <ViewShot ref={cardRef} dataSet={{ id: "mySchedule" }} >
-        {/* 상단 타이틀 영역 */}
-        <View className="flex-row items-center mb-5 gap-3" >
-          <Pressable className="w-8 bg-black h-8 rounded-full justify-center items-center "
-            onPress={ () => {                       
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView className="flex-1 bg-gray-50 px-5 pt-14" dataSet={{ id: "mySchedule" }}>
+        <ViewShot ref={cardRef} dataSet={{ id: "mySchedule" }} >
+          {/* 상단 타이틀 영역 */}
+          <View className="flex-row items-center mb-5 gap-3" >
+            <Pressable className="w-8 bg-black h-8 rounded-full justify-center items-center "
+              onPress={() => {
                 navigation.goBack()
-            }}>
-            <Icon as={ArrowLeftIcon}  className="text-white font-semibold "/>
-          </Pressable>
-          
-          <Text className="text-2xl font-bold">내 일정</Text>
-        </View>
+              }}>
+              <Icon as={ArrowLeftIcon} className="text-white font-semibold " />
+            </Pressable>
 
-        {/* <View className="flex-row w-full justify-between px-3 py-2  "> 
+            <Text className="text-2xl font-bold">내 일정</Text>
+          </View>
+
+          {/* <View className="flex-row w-full justify-between px-3 py-2  "> 
           <Text>✨ {startDate} 부터 총 {totalDays}박 {totalNights}일</Text>
           
           <Ionicons name="create-outline" size={24} color="#444" />
         </View> */}
 
-        {/* 지출 금액 요약 */}
-        {/* <View className="bg-white p-4 rounded-2xl shadow mb-6">
+          {/* 지출 금액 요약 */}
+          {/* <View className="bg-white p-4 rounded-2xl shadow mb-6">
           <View className="flex-row justify-between mb-2">
             <Text className="font-semibold text-gray-700">총 지출금</Text>
             <Text className="font-bold text-lg text-pink-600">₩ 287,000</Text>
@@ -256,93 +258,90 @@ export default function ScheduleResult() {
           </View>
         </View> */}
 
-        <View className="bg-white p-4 rounded-2xl shadow mb-6">
-          <View className="flex-row w-full justify-between px-3 py-2  ">
-            <Text>✨ {startDate} 부터 총 {days}박 {nights}일</Text>
-
-            <Ionicons name="create-outline" size={24} color="#444" />
-          </View>
-
-          <View className="flex-row justify-between">
-            <Text className="font-semibold text-gray-700">여행 목적</Text>
-            <Text className="text-gray-500">{peopleCount}명</Text>
-          </View>
-          <Text className="text-gray-500">{memo}</Text>
-        </View>
-
-
-        {/* DAY별 타임라인 */}
-        {Object.entries(list).map(([key, values = []], index) => (
-
-          <View key={index} className="mb-5 bg-gray-200  ">
+          <View className="bg-white p-4 rounded-2xl shadow mb-6">
             <View className="flex-row w-full justify-between px-3 py-2  ">
-              <Text className="font-bold mb-3  text-base ">
-                {index + 1}일차 <Text className="text-gray-500 text-base ">({key})</Text>
-              </Text>
-              <Ionicons name="add-circle-outline" size={24} color="black" onPress={(e) => {
-                e.stopPropagation();      // 부모 onPress로 전파 막기
-                setModalData(key, values)
-              }} />
+              <Text>✨ {startDate} 부터 총 {days}박 {nights}일</Text>
 
+              <Ionicons name="create-outline" size={24} color="#444" />
             </View>
 
-            {
-              values.map((item, i) => (
-                item.title ? (
-                <View key={i} className="flex-row">
-                  {/* Time */}
-                  <View className="w-16">
-                    <Text className="text-gray-600 font-medium text-center text-base">{i + 1}</Text>
-                  </View>
-
-                  {/* Timeline Line */}
-                  <View className="items-center mr-4">
-                    <View className="w-3 h-3 rounded-full bg-pink-500" />
-                    {i !== values.length - 1 && <View className="w-0.5 h-10 bg-gray-300" />}
-                  </View>
-
-                  {/* Content Box */}
-                  <View className="flex-1 bg-white p-4 rounded-2xl shadow mb-6 flex-row justify-between" >
-                    <Text className="font-semibold text-gray-800">{item.title? item.title : "일정이 없습니다."}</Text>
-                    {/* <Text className="mt-1 text-gray-500">₩ {item.price.toLocaleString()}</Text> */}
-                    <Feather name="minus-circle" size={22} color="black" onPress={(e) => {
-                      e.stopPropagation();
-                      setRemoveData(key, item)
-                    }} />
-                  </View>
-                </View>
-                ) : ( 
-                <Text className="text-gray-400 px-1 text-sm">
-                  등록된 일정이 없습니다.
-                </Text>
-                ) 
-              ))
-            }
+            <View className="flex-row justify-between">
+              <Text className="font-semibold text-gray-700">여행 목적</Text>
+              <Text className="text-gray-500">{peopleCount}명</Text>
+            </View>
+            <Text className="text-gray-500">{memo}</Text>
           </View>
-        ))}
-      </ViewShot>
-      <ScheduleModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        data={modifyData}
-        onSubmit={(day, ids) => {
-          setCallback(day, ids);
-          setModalVisible(false);
-        }}
-      />
-      <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={saveTrip}>
-        <Text className="text-center text-white font-bold text-lg">저장</Text>
-      </TouchableOpacity>
-
-      {list.length > 0 ? (
-      <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={exportPDF}>
-        <Text className="text-center text-white font-bold text-lg">PDF 저장</Text>
-      </TouchableOpacity>
-      ):(<></>)}
 
 
+          {/* DAY별 타임라인 */}
+          {Object.entries(list).map(([key, values = []], index) => (
 
-    </ScrollView>
+            <View key={index} className="mb-5 bg-gray-200  ">
+              <View className="flex-row w-full justify-between px-3 py-2  ">
+                <Text className="font-bold mb-3  text-base ">
+                  {index + 1}일차 <Text className="text-gray-500 text-base ">({key})</Text>
+                </Text>
+                <Ionicons name="add-circle-outline" size={24} color="black" onPress={(e) => {
+                  e.stopPropagation();      // 부모 onPress로 전파 막기
+                  setModalData(key, values)
+                }} />
 
+              </View>
+
+              {
+                values.map((item, i) => (
+                  item.title ? (
+                    <View key={item.id} className="flex-row">
+                      {/* Time */}
+                      <View className="w-16">
+                        <Text className="text-gray-600 font-medium text-center text-base">{i + 1}</Text>
+                      </View>
+
+                      {/* Timeline Line */}
+                      <View className="items-center mr-4">
+                        <View className="w-3 h-3 rounded-full bg-pink-500" />
+                        {i !== values.length - 1 && <View className="w-0.5 h-10 bg-gray-300" />}
+                      </View>
+
+                      {/* Content Box */}
+                      <View className="flex-1 bg-white p-4 rounded-2xl shadow mb-6 flex-row justify-between" >
+                        <Text className="font-semibold text-gray-800">{item.title ? item.title : "일정이 없습니다."}</Text>
+                        {/* <Text className="mt-1 text-gray-500">₩ {item.price.toLocaleString()}</Text> */}
+                        <Feather name="minus-circle" size={22} color="black" onPress={(e) => {
+                          e.stopPropagation();
+                          setRemoveData(key, item)
+                        }} />
+                      </View>
+                    </View>
+                  ) : (
+                    <Text key={item.id} className="text-gray-400 px-1 text-sm">
+                      등록된 일정이 없습니다.
+                    </Text>
+                  )
+                ))
+              }
+            </View>
+          ))}
+        </ViewShot>
+        <ScheduleModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          data={modifyData}
+          onSubmit={(day, ids) => {
+            setCallback(day, ids);
+            setModalVisible(false);
+          }}
+        />
+        <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={saveTrip}>
+          <Text className="text-center text-white font-bold text-lg">저장</Text>
+        </TouchableOpacity>
+
+        {list.length > 0 ? (
+          <TouchableOpacity className="bg-blue-600 py-4 rounded-2xl mt-4 mb-12" onPress={exportPDF}>
+            <Text className="text-center text-white font-bold text-lg">PDF 저장</Text>
+          </TouchableOpacity>
+        ) : (<></>)}
+      </ScrollView>
+    </SafeAreaView>
   );
 }

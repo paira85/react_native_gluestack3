@@ -153,7 +153,7 @@ export default function ScheduleAddRange() {
             value={title}
             onChangeText={setTitle}
             placeholder="예: 여행제목"
-            placeholderTextColor="#aaa"
+            placeholderTextColor="#aaa"  
             className="text-white bg-[#1A3B7A] px-3 py-2 rounded-xl mb-4"
           />
 

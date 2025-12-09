@@ -14,6 +14,7 @@ export async function initSettlementDB(db: any) {
       updated_at date
     );
   `);
+
   // await db.execAsync(`drop table settlement;`)
   await db.execAsync(`
     

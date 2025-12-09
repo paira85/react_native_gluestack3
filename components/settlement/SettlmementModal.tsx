@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import { Pressable, Text, View, Modal, TouchableOpacity } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler';
 import {
   CircleIcon
-}
-  from 'lucide-react-native';
+} from 'lucide-react-native';
+import React, { useState } from 'react';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 type Props = {
   visible: boolean;
   data: string[];
@@ -13,18 +12,13 @@ type Props = {
 };
 
 
-import { Image } from 'react-native';
 import { Radio, RadioGroup, RadioIcon, RadioIndicator, RadioLabel } from '../ui/radio';
 
 export default function SettlmementModal({ visible, onClose, onSubmit, data }: Props) {
 
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState("");
+  console.log('SettlmementModaldata', data)
 
-  const toggle = (id) => {
-    setSelected((prev) => prev.includes(id) ? prev.filter(v => v !== id) : [...prev, id]);
-  };
-
-  const parsedDays = [{ id: 1, category: "숙박", title: "111" }, { id: 2, category: "교통", title: "111" }]
   const formatDisplayDate = (d) => {
     const date = new Date(d);
     return new Intl.DateTimeFormat("ko-KR", {
@@ -48,7 +42,7 @@ export default function SettlmementModal({ visible, onClose, onSubmit, data }: P
 
                 <TouchableOpacity
                   key={idx}
-                  onPress={() => setSelected(item.id)}
+                  onPress={() => setSelected(String(item.id))}
                   className="py-4 border-b border-gray-200 flex-row justify-between items-center"
                 >
 
@@ -60,13 +54,13 @@ export default function SettlmementModal({ visible, onClose, onSubmit, data }: P
                     </View>
 
                     <View className="ml-3">
-                      <Text className="text-base text-sm"> {formatDisplayDate(item.created_at)}</Text>
+                      <Text className="text-base text-sm"> {item.created_at}</Text>
                       <Text className="text-base font-semibold">{item.title}</Text>
                       <Text className="text-base text-sm"> {Math.round(item.per).toLocaleString()} / {Math.round(item.pay).toLocaleString()}원</Text>
                     </View>
                   </View>
 
-                  <Radio value={item.id} >
+                  <Radio value={String(item.id)} >
                     <RadioIndicator>
                       <RadioIcon as={CircleIcon} />
                     </RadioIndicator>

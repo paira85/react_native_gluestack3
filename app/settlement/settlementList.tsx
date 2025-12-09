@@ -1,21 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
-import { Text } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import { router, useFocusEffect } from "expo-router";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useSettlement } from "@/hook/useSettlement";
 import { useSQLiteContext } from "expo-sqlite";
 //로컬 스토어
-import { useSettlementStore } from "../../store/settlementStore";
-import { Ionicons } from "@expo/vector-icons";
+import { SettlementSharePdf } from "@/components/settlement/SettlementShare";
 import SettlmementModal from "@/components/settlement/SettlmementModal";
-import { initSettlementDB, getSettlementGroupRows, getSettlementRowAndGroupId, getSettlementRows, updateSettlementComplate } from "@/db/settlementDB";
-import { SettlementShare } from "@/components/settlement/SettlementShare";
-import SettlementSubModal from "@/components/settlement/SettlementSubModal";
+import { getSettlementGroupRows, getSettlementRowAndGroupId, getSettlementRows, initSettlementDB, updateSettlementComplate } from "@/db/settlementDB";
+import { Ionicons } from "@expo/vector-icons";
 
 
 export default function SettlementListScreen() {
@@ -32,8 +28,11 @@ export default function SettlementListScreen() {
     const groupData = groupList.filter(item => String(item.id) === String(groupSelected))
     const [modalVisible, setModalVisible] = useState(false)
     const [subModalVisible, setSubModalVisible] = useState(false)
-    
-    console.log('groupData', groupData)
+
+
+    const [groupNeed, setGroupNeed] = useState()
+    const [groupPay, setGroupPay] = useState()
+    const [groupPer, setGroupPer] = useState()
 
 
     // const selectList = listStore.filter( m => String(m.group_id) === String(selected))
@@ -41,7 +40,7 @@ export default function SettlementListScreen() {
 
     const totalAmount = useMemo(() => {
 
-        return selectList.reduce(
+        const result = selectList.reduce(
             (sum, x) => ({
                 pay: sum.pay + Math.round(x.pay),
                 per: sum.per + Math.round(x.per),
@@ -51,7 +50,9 @@ export default function SettlementListScreen() {
             }),
             { pay: 0, per: 0, complate: 0, need: 0, total: 0 } // 초기값
         );
+        return result
     }, [selectList]);
+
 
     // const [state, set] = useState({ list: [], initialized: false });
     const init = async () => {
@@ -80,8 +81,27 @@ export default function SettlementListScreen() {
 
         setGroupSelected(groupSelected)
         const listRows = await getSettlementRowAndGroupId(db, groupSelected);
-        console.log('listRows', listRows)
+
         setList(listRows)
+
+
+        const result = listRows.reduce(
+            (sum, x) => ({
+                pay: sum.pay + Math.round(x.pay),
+                per: sum.per + Math.round(x.per),
+                complate: sum.complate + (x.complate == 'true' ? 1 : 0),
+                need: sum.need + (x.complate == 'true' ? 0 : Math.round(x.pay)),
+                total: sum.total + 1,
+            }),
+            { pay: 0, per: 0, complate: 0, need: 0, total: 0 } // 초기값            
+        );
+
+        console.log('result', result.need)
+        console.log('result', result.pay)
+        console.log('result', result.per)
+        setGroupNeed(result.need)
+        setGroupPay(result.pay)
+        setGroupPer(result.per)
     }
 
     useEffect(() => {
@@ -92,8 +112,22 @@ export default function SettlementListScreen() {
         const init = async () => {
             // const listRows = await getSettlementRows    (db)
             const listRows = await getSettlementRowAndGroupId(db, groupSelected);
-            console.log('listRows', listRows)
             setList(listRows)
+
+            const result = listRows.reduce(
+                (sum, x) => ({
+                    pay: sum.pay + Math.round(x.pay),
+                    per: sum.per + Math.round(x.per),
+                    complate: sum.complate + (x.complate == 'true' ? 1 : 0),
+                    need: sum.need + (x.complate == 'true' ? 0 : Math.round(x.pay)),
+                    total: sum.total + 1,
+                }),
+                { pay: 0, per: 0, complate: 0, need: 0, total: 0 } // 초기값            
+            );
+
+            setGroupNeed(result.need)
+            setGroupPay(result.pay)
+            setGroupPer(result.per)
         };
         init();
     }, [selected])
@@ -185,7 +219,7 @@ export default function SettlementListScreen() {
                         <View className="flex-row justify-between mb-1">
                             <Text className="text-gray-300">총 지출</Text>
                             <Text className="text-yellow-300 font-semibold">
-                                {totalAmount.pay}원
+                                {groupPay}원
                             </Text>
                         </View>
 
@@ -202,14 +236,14 @@ export default function SettlementListScreen() {
                             <Text className="text-red-500 font-semibold">미정산 금액</Text>
                             <Text
                                 className={`font-bold text-red-500`}
-                            >    {totalAmount.need.toLocaleString()}원
+                            >    {groupNeed}원
                             </Text>
                         </View>
 
                         <View className="flex-row justify-between mb-2">
                             <Text className="text-gray-300">1인당 부담액</Text>
                             <Text className="text-yellow-300 font-semibold">
-                                {totalAmount.per.toLocaleString()}원
+                                {groupPer}원
                             </Text>
                         </View>
 
@@ -233,10 +267,11 @@ export default function SettlementListScreen() {
 
                         <TouchableOpacity className="flex-1 bg-[#1F3B7A] py-3 rounded-xl"
                             onPress={() => {
-                                console.log('groupData' , groupData)
-                                console.log('selectList' , selectList) 
-                                  SettlementShare(groupData[0], selectList)  
-                                  }
+                                console.log('groupData', groupData)
+                                console.log('selectList', selectList)
+                                //   SettlementShareText(groupData[0], selectList)  
+                                SettlementSharePdf(groupData[0], selectList)
+                            }
                             }
                         >
                             <Text className="text-center text-white font-semibold">
@@ -346,11 +381,6 @@ export default function SettlementListScreen() {
                     console.log('selectedDay', selectList)
                     await updateSettlementComplate(db, ids)
                     reload()
-                    // const updateDate = selectList.filter(item => (item.id === ids))
-                    // update(ids, {
-                    //     ...updateDate
-                    //     , complate: 'true'
-                    // });
 
                 }}
             />
@@ -384,7 +414,7 @@ export default function SettlementListScreen() {
             </Pressable>
 
             <Pressable
-                className="  absolute bottom-8 right-24
+                className="absolute bottom-8 right-24
                     w-16 h-16 rounded-full
                     bg-neutral-800
                     justify-center items-center

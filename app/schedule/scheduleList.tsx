@@ -56,7 +56,7 @@ export default function ListScreen({ }) {
     const deleteItem = async () => {
         await deleteSchedule(db, selected)
         const rows = await getScheduleRows(db);
-        
+
         setSubModalVisible(false)
         setSelected(null)
         setTrips(rows)
@@ -89,7 +89,12 @@ export default function ListScreen({ }) {
                         <View className="flex-row items-center mb-5 gap-3" >
                             <Pressable className="w-8 bg-black h-8 rounded-full justify-center items-center "
                                 onPress={() => {
-                                    navigation.goBack()
+                                    // router.push({
+                                    //     pathname: 'schedule/scheduleList',
+                                    //     params: {}
+                                    // })
+                                    navigation.navigate("schedule/scheduleList",{})
+
                                 }}>
                                 <Icon as={ArrowLeftIcon} className="text-white font-semibold " />
                             </Pressable>
@@ -143,7 +148,7 @@ export default function ListScreen({ }) {
                 {/* 플로팅 추가 버튼 */}
                 <Fab
                     placement="bottom right"
-                    className="mb-20 mr-6 h-16 w-16 rounded-full bg-white"
+                    className="mb-16 mr-3 h-16 w-16 rounded-full bg-neutral-800"
                     onPress={() => {
                         router.push({
                             pathname: "schedule/",
@@ -151,7 +156,7 @@ export default function ListScreen({ }) {
                         })
                     }}
                 >
-                    <Icon as={Plus} className="h-7 w-7 text-black" />
+                    <Icon as={Plus} className="h-7 w-7 text-white" />
                 </Fab>
 
                 {/* 하단 탭바 */}

@@ -4,8 +4,6 @@ import { View, Text, Button, Alert, StyleSheet, Platform } from "react-native";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
-import html2canvas from "html2canvas";
-
 
 export default function SharePdfScreen() {
  
@@ -18,6 +16,8 @@ export default function SharePdfScreen() {
             let uri = null;
 
             if (Platform.OS === "web") {
+                const html2canvas = (await import("html2canvas")).default;
+
                 // 웹 캡처
                 const element = document.getElementById("captureView"); // 캡처 영역
                 if (!element) {
