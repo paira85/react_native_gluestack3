@@ -14,6 +14,9 @@ import { useSettlementStore } from "../../store/settlementStore";
 import { Ionicons } from "@expo/vector-icons";
 import SettlmementModal from "@/components/settlement/SettlmementModal";
 import { initSettlementDB, getSettlementGroupRows, getSettlementRowAndGroupId, getSettlementRows, updateSettlementComplate } from "@/db/settlementDB";
+import { SettlementShare } from "@/components/settlement/SettlementShare";
+import SettlementSubModal from "@/components/settlement/SettlementSubModal";
+
 
 export default function SettlementListScreen() {
     const navigation = useNavigation();
@@ -28,7 +31,8 @@ export default function SettlementListScreen() {
     // const groupData = groupStroe.filter(item => String(item.id) === String(groupSelected))
     const groupData = groupList.filter(item => String(item.id) === String(groupSelected))
     const [modalVisible, setModalVisible] = useState(false)
-
+    const [subModalVisible, setSubModalVisible] = useState(false)
+    
     console.log('groupData', groupData)
 
 
@@ -111,9 +115,8 @@ export default function SettlementListScreen() {
                     <Ionicons name="chevron-back" size={24} color="white"
                         onPress={() => {
                             router.push({
-                                pathname: '../',
+                                pathname: '../main',
                                 params: {
-
                                 }
                             })
                         }
@@ -228,7 +231,14 @@ export default function SettlementListScreen() {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity className="flex-1 bg-[#1F3B7A] py-3 rounded-xl">
+                        <TouchableOpacity className="flex-1 bg-[#1F3B7A] py-3 rounded-xl"
+                            onPress={() => {
+                                console.log('groupData' , groupData)
+                                console.log('selectList' , selectList) 
+                                  SettlementShare(groupData[0], selectList)  
+                                  }
+                            }
+                        >
                             <Text className="text-center text-white font-semibold">
                                 내역 공유
                             </Text>
@@ -344,7 +354,6 @@ export default function SettlementListScreen() {
 
                 }}
             />
-
 
             {/* 등록 버튼 */}
 

@@ -13,9 +13,10 @@ import { Icon } from '@/components/ui/icon';
 import { userSchedule } from "@/hook/useSchedule";
 import { router } from "expo-router";
 import {
-    ArrowLeftIcon,
+  ArrowLeftIcon,
 }
-from 'lucide-react-native';
+  from 'lucide-react-native';
+import { ScrollView } from "react-native-gesture-handler";
 
 function generateDays(start, end) {
   const s = new Date(start);
@@ -33,7 +34,7 @@ export default function ScheduleAddRange() {
   const navigation = useNavigation();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  
+
   //설정하고 초기 세팅
   const [datas, setDatas] = useState([]);
   const [peopleCount, setPeopleCount] = useState(1);
@@ -105,50 +106,48 @@ export default function ScheduleAddRange() {
     return marks;
   };
 
-  const [title,setTitle] = useState("");
-  const [memo,setMemo] = useState("");
-  useEffect(()=>{
+  const [title, setTitle] = useState("");
+  const [memo, setMemo] = useState("");
+  useEffect(() => {
     const init = initScheduleDB(db);
     const rows = getScheduleRows(db);
-    console.log('init')
-    console.log('rows' , rows)
-  },[]  )
+  }, [])
 
-  
-  const saveTrip = async () => {    
+
+  const saveTrip = async () => {
     // 날짜 자동 생성 & 저장
 
     const days = generateDays(startDate, endDate);
 
     const totalDays = Object.keys(days).length - 1; // 3
     const totalNights = Object.keys(days).length;   // 2
-    const result = await insertSchedule(db,title,memo,  startDate ,endDate, totalDays , totalNights , peopleCount )
-    console.log('result' , result.lastInsertRowId)
+    const result = await insertSchedule(db, title, memo, startDate, endDate, totalDays, totalNights, peopleCount)
+
     let groupId = result.lastInsertRowId
 
     const datas = days.reduce((acc, day) => {
       acc[day] = [];
       return acc;
     }, {});
-    navigation.navigate("schedule/scheduleResult", { groupId , startDate, endDate, datas })
+    navigation.navigate("schedule/scheduleResult", { groupId, startDate, endDate, datas })
 
   };
 
-
-  console.log('datas1111' , datas)
   return (
-    <View className="flex-1 bg-white px-5 pt-14">
-      <View className="flex-row items-center mb-5 gap-3" >
-        <Pressable className="w-8 bg-black h-8 rounded-full justify-center items-center "
-          onPress={ () => {                       
-              navigation.goBack()
-          }}>
-          <Icon as={ArrowLeftIcon}  className="text-white font-semibold "/>
-        </Pressable>
+    <ScrollView className="flex-1">
 
-        <Text className="text-xl font-bold text-gray-800 ">언제 떠나세요?</Text>
-      </View>
-      <View className="bg-[#0F2C63] p-4 rounded-2xl mb-8">
+      <View className="flex-1 bg-white px-5 pt-5  mb-10">
+        <View className="flex-row items-center mb-5 gap-3" >
+          <Pressable className="w-8 bg-black h-8 rounded-full justify-center items-center "
+            onPress={() => {
+              navigation.goBack()
+            }}>
+            <Icon as={ArrowLeftIcon} className="text-white font-semibold " />
+          </Pressable>
+
+          <Text className="text-xl font-bold text-gray-800 ">언제 떠나세요?</Text>
+        </View>
+        <View className="bg-[#0F2C63] p-4 rounded-2xl mb-8">
           <Text className="text-gray-200 mb-1">여행 제목</Text>
           <TextInput
             value={title}
@@ -175,43 +174,43 @@ export default function ScheduleAddRange() {
             placeholderTextColor="#aaa"
             className="text-white bg-[#1A3B7A] px-3 py-2 rounded-xl mb-4"
           />
+        </View>
+
+
+        <Calendar
+          markingType="period"
+          onDayPress={onDayPress}
+          markedDates={getMarkedDates()}
+          theme={{
+            arrowColor: "#22C55E",
+            todayTextColor: "#3B82F6",
+            textDayFontSize: 16,
+          }}
+        />
+
+        {/* 선택 표시 */}
+        <View className="mt-8">
+          <Text className="text-md font-semibold text-gray-700">
+            출발일 : {startDate || "미정"}
+          </Text>
+          <Text className="text-md font-semibold text-gray-700 mt-1">
+            도착일 : {endDate || "미정"}
+          </Text>
+        </View>
+
+        {/* 다음 버튼 */}
+        <TouchableOpacity
+          disabled={!startDate || !endDate}
+          onPress={() =>
+            saveTrip()
+          }
+          className={`mt-10 py-4 rounded-xl ${startDate && endDate ? "bg-[#1A3B7A]" : "bg-gray-300"
+            }`}
+        >
+          <Text className="text-center text-white font-bold text-ms">저장</Text>
+        </TouchableOpacity>
+
       </View>
-
-
-      <Calendar
-        markingType="period"
-        onDayPress={onDayPress}
-        markedDates={getMarkedDates()}
-        theme={{
-          arrowColor: "#22C55E",
-          todayTextColor: "#3B82F6",
-          textDayFontSize: 16,
-        }}
-      />
-
-      {/* 선택 표시 */}
-      <View className="mt-8">
-        <Text className="text-xl font-semibold text-gray-700">
-          출발일 : {startDate || "미정"}
-        </Text>
-        <Text className="text-xl font-semibold text-gray-700 mt-1">
-          도착일 : {endDate || "미정"}
-        </Text>
-      </View>
-
-      {/* 다음 버튼 */}
-      <TouchableOpacity
-        disabled={!startDate || !endDate}
-        onPress={() => 
-          saveTrip()
-        }
-        className={`mt-10 py-4 rounded-xl ${
-          startDate && endDate ? "bg-blue-700" : "bg-gray-300"
-        }`}
-      >
-        <Text className="text-center text-white font-bold text-xl">저장</Text>
-      </TouchableOpacity>
-      
-    </View>
+    </ScrollView>
   );
 }

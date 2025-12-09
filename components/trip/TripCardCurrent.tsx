@@ -24,6 +24,7 @@ import { deleteSchedule } from "@/db/scheduleDB";
 interface Props {
     trip : Trip;
     deleteItem : void;
+    showModal: void;
 }
 
 interface Trip {
@@ -39,7 +40,7 @@ interface Trip {
 
 
 /** 진행 중 여행 큰 카드 */
-export default function TripCardCurrent( { trip, deleteItem }: Props) {
+export default function TripCardCurrent( { trip, showModal , deleteItem }: Props) {
     
   return (
     <>
@@ -102,7 +103,8 @@ export default function TripCardCurrent( { trip, deleteItem }: Props) {
 
           <Pressable hitSlop={10}  onPress={()=>{
                 console.log(1)
-                deleteItem(trip.id)
+                showModal(trip.id)
+                // deleteItem(trip.id)
           }}>
             <Icon
               as={MoreVertical}

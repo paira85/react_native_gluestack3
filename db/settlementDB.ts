@@ -1,5 +1,6 @@
 // services/settlement.ts
 export async function initSettlementDB(db: any) {
+  // await db.execAsync(`drop table group_settlement;`)
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS group_settlement (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

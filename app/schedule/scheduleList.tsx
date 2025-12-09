@@ -30,12 +30,13 @@ import {
     ArrowLeftIcon
 }
     from 'lucide-react-native';
+import SettlementSubModal from "@/components/settlement/SettlementSubModal";
 
 export default function ListScreen({ }) {
     const [trips, setTrips] = useState<any[]>([]);
-
+    const [subModalVisible, setSubModalVisible] = useState(false);
     const navigation = useNavigation();
-
+    const [selected, setSelected] = useState(null);
     const db = useSQLiteContext();
     // const init = initScheduleDB(db);
 
@@ -52,14 +53,30 @@ export default function ListScreen({ }) {
     }, [])
 
 
-    const deleteItem = async (id) => {
-        await deleteSchedule(db, id)
+    const deleteItem = async () => {
+        await deleteSchedule(db, selected)
         const rows = await getScheduleRows(db);
+        
+        setSubModalVisible(false)
+        setSelected(null)
         setTrips(rows)
     }
 
+    const updateItem = async () => {
+        setSubModalVisible(false)
+        setSelected(null)
+        navigation.navigate("schedule/scheduleResult",
+            {
+                "groupId": selected,
+                "datas": {}
+            })
+    }
+    const showModal = async (id) => {
+        setSubModalVisible(true)
+        setSelected(id)
+    }
     return (
-        <Box className="flex-1 ">
+        <Box className="flex-1">
             <SafeAreaView style={{ flex: 1 }}>
                 {/* 상단 영역 */}
                 <ScrollView
@@ -86,6 +103,9 @@ export default function ListScreen({ }) {
 
                     {/* 진행 중 여행 카드 */}
                     <Box className="mt-5 px-5 gap-3">
+                        <Text className="mb-4 text-lg font-extrabold ">
+                            진행중인 여행
+                        </Text>
                         {trips.map((trip) => (
                             <Pressable
                                 key={trip.id}
@@ -97,9 +117,10 @@ export default function ListScreen({ }) {
                                             "datas": {}
                                         })
                                 }}
-                                className="flex-1 py-3 bg-blue-600 rounded-xl ml-2"
+                                className="flex-1 py-3 rounded-xl ml-2 bg-neutral-800"
                             >
-                                <TripCardCurrent trip={trip} deleteItem={deleteItem} />
+                                <TripCardCurrent trip={trip} showModal={showModal} />
+                                {/* deleteItem={deleteItem} */}
                             </Pressable>
                         ))}
                     </Box>
@@ -136,6 +157,21 @@ export default function ListScreen({ }) {
                 {/* 하단 탭바 */}
                 {/* <BottomTabBar /> */}
             </SafeAreaView>
+
+            <SettlementSubModal
+                visible={subModalVisible}
+                onDeleted={deleteItem}
+                onUpdated={updateItem}
+                onClose={() => setSubModalVisible(false)}
+                onSubmit={async (ids) => {
+                    console.log('selectedDay', ids)
+                }}
+
+            />
         </Box>
+
+
+
+
     );
 }
