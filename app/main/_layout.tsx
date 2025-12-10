@@ -1,42 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { View, Text, ScrollView, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Box } from '@/components/ui/box';
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Divider } from '@/components/ui/divider';
 
-import { Image } from '@/components/ui/image';
 import Header from '@/components/Header';
 import MainBanner from '@/components/MainBanner';
 import Gupon from '@/components/event/Gupon';
-import { Icon } from '@/components/ui/icon';
+import { Image } from '@/components/ui/image';
 const placeholder = (w, h) =>
   ({ uri: `https://via.placeholder.com/${w}x${h}.png?text=IMG` });
 
-import {
-  InstagramIcon,
-  FacebookIcon,
-  Camera,
-  MailIcon,
-  ChromeIcon,
-  PhoneIcon,
-}
-from 'lucide-react-native';
-import { P } from '@expo/html-elements';
 import Footer from '@/components/Footer';
-import BottomMenu from '@/components/menus/BottomMenu';
-import { HStack } from '@/components/ui/hstack';
-import { VStack } from '@/components/ui/vstack';
-import EnjoiList from '@/components/enjoi/EnjoiList';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import RootNavigation from '../navigate';
-import CommunityCard from '@/components/board/communutyCard';
-import { FlatList } from 'react-native-gesture-handler';
 import AttractionCard from '@/components/attraction/AttractionCard';
-import FoodCards from '@/components/food/FoodCards';
-import FoodCard from '@/components/food/FoodCard';
+import CommunityCard from '@/components/board/communutyCard';
 import SubBanner from '@/components/cards/banner/SubBanner';
+import EnjoiList from '@/components/enjoi/EnjoiList';
+import FoodCard from '@/components/food/FoodCard';
+import BottomMenu from '@/components/menus/BottomMenu';
+import { router, useNavigation } from 'expo-router';
+import { FlatList } from 'react-native-gesture-handler';
 
 export default function MainLayout() {
   

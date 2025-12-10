@@ -1,36 +1,23 @@
+import SettlementSubModal from "@/components/settlement/SettlementSubModal";
+import TripCardCompleted from "@/components/trip/TripCardComplate";
+import TripCardCurrent from "@/components/trip/TripCardCurrent";
+import { Box } from "@/components/ui/box";
+import { Fab } from "@/components/ui/fab";
+import { Icon } from "@/components/ui/icon";
 import { router, useNavigation } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Pressable, Image } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import {
-    initScheduleDB,
-    getScheduleRows,
-    insertSchedule,
-    deleteSchedule
-} from "../../db/scheduleDB";
-import { Box } from "@/components/ui/box";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Fab } from "@/components/ui/fab";
-import {
-    Heart,
-    MoreVertical,
-    Calendar,
-    Search,
-    MapPin,
-    MessageCircle,
-    User,
-    Plus,
+    ArrowLeftIcon,
+    Plus
 } from "lucide-react-native";
-import { Icon } from "@/components/ui/icon";
-import { HStack } from "@/components/ui/hstack";
-import { VStack } from "@/components/ui/vstack";
-import TripCardCurrent from "@/components/trip/TripCardCurrent";
-import TripCardCompleted from "@/components/trip/TripCardComplate";
+import { useEffect, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
-    ArrowLeftIcon
-}
-    from 'lucide-react-native';
-import SettlementSubModal from "@/components/settlement/SettlementSubModal";
+    deleteSchedule,
+    getScheduleRows,
+    initScheduleDB
+} from "../../db/scheduleDB";
 
 export default function ListScreen({ }) {
     const [trips, setTrips] = useState<any[]>([]);

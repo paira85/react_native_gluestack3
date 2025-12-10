@@ -5,12 +5,9 @@ import {
   Heart,
   MoreVertical
 } from "lucide-react-native";
-import React from "react";
 import { Pressable, Text, View } from "react-native";
-import { HStack } from "../ui/hstack/index.web";
-import { Icon } from "../ui/icon/index.web";
-import { VStack } from "../ui/vstack/index.web";
 import { ScrollView } from "react-native-gesture-handler";
+import { Icon } from "../ui/icon/index.web";
 
 interface Props {
     trip : Trip;

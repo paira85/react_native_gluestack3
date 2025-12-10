@@ -1,4 +1,6 @@
+import { Fab, FabIcon } from '@/components/ui/fab';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import { MoonIcon, SunIcon } from '@/components/ui/icon';
 import '@/global.css';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
@@ -7,20 +9,14 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
+import { Slot, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
-import { useColorScheme } from '@/components/useColorScheme';
-import { Slot, Stack, usePathname } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { Fab, FabIcon } from '@/components/ui/fab';
-import { MoonIcon, SunIcon } from '@/components/ui/icon';
-import RootNavigation from './navigate';
 import { SQLiteProvider } from "expo-sqlite";
-import { InitDBWrapper } from '@/hook/InitDBWrapper';
+import { useEffect, useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync();
