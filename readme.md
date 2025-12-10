@@ -28,3 +28,11 @@ resizeMode="cover"
 
 npx expo install expo-sqlite
 npx expo install expo-sqlite
+
+
+# 안드로이드 빌드 초기
+npx expo prebuild
+
+
+apk
+gradlew assembleRelease
