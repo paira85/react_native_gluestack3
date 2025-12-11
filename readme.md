@@ -9,7 +9,8 @@ https://github.com/gluestack/gluestack-ui/blob/main/src/docs/apps/dashboard-app/
 https://icons.expo.fyi/Index
 
 https://react-beginner-7qki.vercel.app/                                                                                                                   
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+ https://oblador.github.io/react-native-vector-icons/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 import { Image } from 'react-native';
  <Image
 source={p.img}
@@ -246,3 +247,4 @@ expo.sqlite.enableFTS=false
 expo.sqlite.useSQLCipher=false
 
 # ############## proguard-rules.pro
+

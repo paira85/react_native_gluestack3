@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 export default function  ReviewCard({ score, count, onWrite }: any)  {
   return (
-    <View className="bg-white rounded-2xl shadow-md px-5 py-6 mb-5">
+    <View className="bg-white rounded-2xl  px-5 py-6 mb-5">
       <View className="flex-row justify-between items-center mb-4">
         <Text className="text-xl font-bold text-black">리뷰</Text>
         <TouchableOpacity onPress={onWrite}>

@@ -1,11 +1,10 @@
-import { View, FlatList, Text, Pressable } from "react-native";
 import AttractionCard from "@/components/attraction/AttractionCard";
-import { router, useNavigation } from "expo-router";
 import { Icon } from "@/components/ui/icon";
+import { useNavigation } from "expo-router";
 import {
   ArrowLeftIcon
-}
-  from 'lucide-react-native';
+} from 'lucide-react-native';
+import { FlatList, Pressable, Text, View } from "react-native";
 
 const sampleData = [
   {

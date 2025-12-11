@@ -2,7 +2,7 @@ import { Text, View } from "react-native";
 
 export default function  TagsCard({ tags }: any)  {
   return (
-    <View className="bg-white rounded-2xl shadow-md px-5 py-6 mb-5">
+    <View className="bg-white rounded-2xl shadow-md px-3 py-3  mb-3">
       <View className="flex-row flex-wrap">
         {tags.map((tag: string, index: number) => (
           <View

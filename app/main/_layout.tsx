@@ -24,7 +24,7 @@ import { router, useNavigation } from 'expo-router';
 import { FlatList } from 'react-native-gesture-handler';
 
 export default function MainLayout() {
-  
+
   const navigation = useNavigation();
 
   const bannerData = [
@@ -37,31 +37,31 @@ export default function MainLayout() {
       image: require("/assets/images/background/1739799352351-27.jpg"),
       title: "World's \n Best Beach Club",
       subtitle: "In Bali",
-    }, 
+    },
   ];
-  
+
   const categoriesRow1 = [
-    { label: "기념품", icon: require("/assets/images/icons/gift.png") ,"id":"1"},
-    { label: "산책로", icon: require("/assets/images/icons/gps.png") ,"id":"2"},
-    { label: "카페/펌", icon: require("/assets/images/icons/coffee-cup.png") ,"id":"3"},
-    { label: "음식점", icon: require("/assets/images/icons/pizza.png") ,"id":"4"},
-    { label: "서핑", icon: require("/assets/images/icons/skateboard.png") ,"id":"5"},
-    { label: "숙소", icon: require("/assets/images/icons/skateboard.png") ,"id":"6"},
+    { label: "기념품", icon: require("/assets/images/icons/gift.png"), "id": "1" },
+    { label: "산책로", icon: require("/assets/images/icons/gps.png"), "id": "2" },
+    { label: "카페/펌", icon: require("/assets/images/icons/coffee-cup.png"), "id": "3" },
+    { label: "음식점", icon: require("/assets/images/icons/pizza.png"), "id": "4" },
+    { label: "서핑", icon: require("/assets/images/icons/skateboard.png"), "id": "5" },
+    { label: "숙소", icon: require("/assets/images/icons/skateboard.png"), "id": "6" },
   ];
 
 
-  const [enjoiTabIndex , setEnJoiTabIndex] = useState<Number>(0)
-  console.log('enjoiTabIndex ' , enjoiTabIndex)
+  const [enjoiTabIndex, setEnJoiTabIndex] = useState<Number>(0)
+  console.log('enjoiTabIndex ', enjoiTabIndex)
 
-  const [communityType,setCommunityType] = useState("일반")
+  const [communityType, setCommunityType] = useState("일반")
 
   //[에스레포츠] : http://www.sleports.com/
 
   //블러그, 인스타 광고 및 정보 링크
 
-  const [attractionIndex , setAttractionIndex] = useState(0)
-   const [actionDatas , setActionDatas] = useState([])
-  
+  const [attractionIndex, setAttractionIndex] = useState(0)
+  const [actionDatas, setActionDatas] = useState([])
+
   const sampleData = [
     {
       id: 1,
@@ -104,15 +104,15 @@ export default function MainLayout() {
     },
   ];
 
-  useEffect(()=>{
-    console.log('attractionIndex' , attractionIndex)
-    if(attractionIndex == 0){
+  useEffect(() => {
+    console.log('attractionIndex', attractionIndex)
+    if (attractionIndex == 0) {
       setActionDatas(sampleData)
-    }else{
+    } else {
       setActionDatas(sampleData2)
     }
-  
-  },[attractionIndex])
+
+  }, [attractionIndex])
 
 
   const renderFoodItem = ({ item }: any) => (
@@ -127,40 +127,40 @@ export default function MainLayout() {
     />
   );
 
-   const foodDatas = [    
-      {
-          id:"1",
-          title: "휴백담 베이커리 카페 강원도 인제 본점",
-          category: "카페,디저트",
-          status: "영업중",
-          star: "4.59",
-          desc:"넓은 매장에서 여유롭게 즐기는 시간",
-          review: "555",
-          answer: "카페가 너무 이뻐요",
-          coupon:'15',
-          img: require("/assets/images/food/01/2.png"),
-          sumImg : [
-              require("/assets/images/food/01/1.png"),
-              require("/assets/images/food/01/2.png"),
-              require("/assets/images/food/01/3.png")
-          ]
-      },
-      {
-          id:"2",
-          title: "백담문스카페카페",
-          category: "카페,디저트",
-          status: "영업종료",
-          star: "4.51",
-          review: "885",
-          answer: "음식이 너무 맛있습니다.",
-          coupon:'',
-          img: require("/assets/images/food/02/4.png"),
-          sumImg : [
-              require("/assets/images/food/02/4.png"),
-              require("/assets/images/food/02/5.png"),
-              require("/assets/images/food/02/6.png")
-          ]
-      } 
+  const foodDatas = [
+    {
+      id: "1",
+      title: "휴백담 베이커리 카페 강원도 인제 본점",
+      category: "카페,디저트",
+      status: "영업중",
+      star: "4.59",
+      desc: "넓은 매장에서 여유롭게 즐기는 시간",
+      review: "555",
+      answer: "카페가 너무 이뻐요",
+      coupon: '15',
+      img: require("/assets/images/food/01/2.png"),
+      sumImg: [
+        require("/assets/images/food/01/1.png"),
+        require("/assets/images/food/01/2.png"),
+        require("/assets/images/food/01/3.png")
+      ]
+    },
+    {
+      id: "2",
+      title: "백담문스카페카페",
+      category: "카페,디저트",
+      status: "영업종료",
+      star: "4.51",
+      review: "885",
+      answer: "음식이 너무 맛있습니다.",
+      coupon: '',
+      img: require("/assets/images/food/02/4.png"),
+      sumImg: [
+        require("/assets/images/food/02/4.png"),
+        require("/assets/images/food/02/5.png"),
+        require("/assets/images/food/02/6.png")
+      ]
+    }
   ]
 
   const bannerDatas = [
@@ -170,147 +170,159 @@ export default function MainLayout() {
   ];
 
 
+  const renderAttrat = ({ item, idx }: any) => {
+    return (
+      <AttractionCard
+        key={idx}
+        item={item}
+        onPress={() =>
+          navigation.navigate("attraction/attractionDetail", { item })
+        }
+      />
+    )
+  }
   return (
     <SafeAreaView className="bg-white flex-1" >
       <ScrollView className="flex-1" contentContainerStyle={{ flexGrow: 1 }}>
 
         <Box className="flex-1 mb-3 ">
-            <Header />         
-            {/* BODY */}
-            <Box className="flex-1 h-full w-full ">
-              {/* BIG BANNER */}           
-              <MainBanner data={bannerData} />        
-              {/* 쿠폰 영역 */}
-              <Gupon />
+          <Header />
+          {/* BODY */}
+          <Box className="flex-1 h-full w-full ">
+            {/* BIG BANNER */}
+            <MainBanner data={bannerData} />
+            {/* 쿠폰 영역 */}
+            <Gupon />
 
-              {/* 카테고리 아이콘 2줄 */}
-              <Box className="bg-white pt-6 px-4 mb-3">
-                {/* 1줄 */}
-                <Box className="flex-row justify-around gap-4">
-                  {categoriesRow1.map((item) => (
-                    <Pressable key={item.label}  onPress={() =>
-                          router.push({
-                              pathname: "/event",
-                              params: { id: item.id }
-                          })
-                      }
-                    >
-                      <View className="items-center ">                     
-                          <Image
-                            source={item.icon}
-                            style={{ width: "100%", height: "100%" }}
-                            resizeMode="contain"
-                            className="w-10 h-10 mb-1 h-[60px]"
-                            alt="CATEGORY"
-                          />
-                        
-                        <Text className="text-[12px] text-[#00306E] ">
-                          {item.label}
-                        </Text>              
-                      </View>
-                    </Pressable>
-                  ))}
-                </Box>
-              </Box>
-
-              {/* 즐기는 인제 */}
-              <EnjoiList 
-                  fnTabIndex={setEnJoiTabIndex}  
-                  index={enjoiTabIndex} 
-                />   
-
-              {/* 광광명소 */}
-              <Box className="bg-white pt-6 px-4 mb-3 gap-4 ">
-                {/* 1줄 */}
-                <Text className="text-[20px] font-extrabold text-black mb-2">관광지</Text>
-                <Box className="flex-row gap-4">
-                   <Pressable key={0}  onPress={() =>
-                        setAttractionIndex(0) 
-                      }
-                    >
-                      <Text>관광명소1</Text>
-                    </Pressable>
-                    <Pressable key={1}  onPress={() =>
-                        setAttractionIndex(1) 
-                      }
-                    >
-                      <Text>관광명소2</Text>
-                    </Pressable>
-                </Box>
-
-                <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={{ paddingHorizontal: 16 }}
-                      className="w-full"
-                  >
-                  {
-                  actionDatas.map((item , idx) => (
-                    <AttractionCard
-                        key={idx}
-                        item={item}
-                        onPress={() => 
-                            navigation.navigate("attraction/attractionDetail", { item })
-                  
-                          }
-                      />
-                  ))
+            {/* 카테고리 아이콘 2줄 */}
+            <Box className="bg-white pt-6 px-4 mb-3">
+              <Box className="flex-row justify-around gap-4">
+                {categoriesRow1.map((item) => (
+                  <Pressable key={item.label} onPress={() =>
+                    router.push({
+                      pathname: "/event",
+                      params: { id: item.id }
+                    })
                   }
-                  </ScrollView>
+                  >
+                    <View className="items-center ">
+                      <Image
+                        source={item.icon}
+                        style={{ width: "100%", height: "100%" }}
+                        resizeMode="contain"
+                        className="w-10 h-10 mb-1 h-[60px]"
+                        alt="CATEGORY"
+                      />
+
+                      <Text className="text-[12px] text-[#00306E] ">
+                        {item.label}
+                      </Text>
+                    </View>
+                  </Pressable>
+                ))}
+              </Box>
+            </Box>
+
+            {/* 즐기는 인제 */}
+            <EnjoiList
+              fnTabIndex={setEnJoiTabIndex}
+              index={enjoiTabIndex}
+            />
+
+            {/* 광광명소 */}
+            <Box className="bg-white px-4 mb-3 ">
+
+              <Text className="text-[20px] py-2 font-extrabold text-black mb-2">관광지</Text>
+              <Box className="flex-row gap-4 mb-3">
+                <Pressable key={0} onPress={() =>
+                  setAttractionIndex(0)
+                }
+                >
+                  <Text>관광명소1</Text>
+                </Pressable>
+                <Pressable key={1} onPress={() =>
+                  setAttractionIndex(1)
+                }
+                >
+                  <Text>관광명소2</Text>
+                </Pressable>
               </Box>
 
+              {/* {
+                actionDatas.map((item, idx) => (
+                  <AttractionCard
+                    key={idx}
+                    item={item}
+                    onPress={() =>
+                      navigation.navigate("attraction/attractionDetail", { item })
 
-              <View className=" bg-white pt-6 px-4 mb-3 ">
-                <Text className="text-[20px] font-extrabold text-black mb-2">
-                    추천장소(핫)
-                </Text>
-                  <FlatList
-                    data={foodDatas}
-                    horizontal
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={renderFoodItem}
-                    // showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingHorizontal: 16 }}
-                    
+                    }
                   />
-                  
-              </View>   
+                ))
+              } */}
 
-              <Divider className="bg-primary-100 m-5" />
-              <View className=" bg-white pt-6 px-4 mb-3">
-                <Text className="text-[20px] font-extrabold text-black mb-2">
-                    소식지
-                </Text>
-                <View className="flex-row  justify-around gap-4 py-3 ">
-                  <View className="border border-blue-800 rounded-xl px-5 py-4 flex-1 mr-3">
-                    <Pressable onPress={()=>{
-                        setCommunityType("일반")
-                      }}><Text>커뮤니티</Text>
-                    </Pressable>
-                  </View>
-                  <View className="border border-blue-800 rounded-xl px-5 py-4 flex-1">
-                    <Pressable onPress={()=>{
-                        setCommunityType("공지")
-                      }}><Text>공지</Text>
-                    </Pressable>
-                  </View>
-                </View>
-              </View>    
-                 
-              <CommunityCard data={{type:communityType}} />
-             
+              <FlatList
+                data={actionDatas}
+                horizontal
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderAttrat}
+                showsHorizontalScrollIndicator={false}
+              />
+
             </Box>
-            <SubBanner datas={bannerDatas}/>
+
+
+            <View className=" bg-white pt-6 px-2 mb-3 ">
+              <Text className="text-[20px] font-extrabold text-black mb-2">
+                추천장소(핫)
+              </Text>
+              <FlatList
+                data={foodDatas}
+                horizontal
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderFoodItem}
+                // showsVerticalScrollIndicator={false}
+                // showsHorizontalScrollIndicator={false}
+                // contentContainerStyle={{ paddingHorizontal: 16 }}
+
+              />
+
+            </View>
 
             <Divider className="bg-primary-100 m-5" />
-            
+            <View className=" bg-white pt-6 px-4 mb-3">
+              <Text className="text-[20px] font-extrabold text-black mb-2">
+                소식지
+              </Text>
+              <View className="flex-row  justify-around gap-4 py-3 ">
+                <View className="border border-blue-800 rounded-xl px-5 py-4 flex-1 mr-3">
+                  <Pressable onPress={() => {
+                    setCommunityType("일반")
+                  }}><Text>커뮤니티</Text>
+                  </Pressable>
+                </View>
+                <View className="border border-blue-800 rounded-xl px-5 py-4 flex-1">
+                  <Pressable onPress={() => {
+                    setCommunityType("공지")
+                  }}><Text>공지</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+
+            <CommunityCard data={{ type: communityType }} />
+
+          </Box>
+          <SubBanner datas={bannerDatas} />
+
+          <Divider className="bg-primary-100 m-5" />
+
         </Box>
-        <Footer />        
+        <Footer />
         {/* 하단 큰 아이콘 메뉴 */}
         <BottomMenu />
-         
-        </ScrollView>
+
+      </ScrollView>
     </SafeAreaView>
   );
 }

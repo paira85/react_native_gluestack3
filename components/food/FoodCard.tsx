@@ -3,6 +3,7 @@ import React from 'react'
 import { Dimensions, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 // import { Image } from '../ui/image';
 import { Image } from 'react-native';
+// import { Image } from 'expo-image'
 const screenWidth = Dimensions.get('window').width;
 // import { Food } from "../../types/Food";  // alias 사용 시
 import { Food } from "@/types/Food";  // alias 사용 시
@@ -16,7 +17,7 @@ export default function FoodCard({ food } : Props) {
     if (!food ) return null;
     
     return (
-        <View className="mb-3 rounded-3xl mx-auto shadow-md bg-white px-3 gap-2">
+        <View className="mb-3 rounded-3xl mx-auto shadow-md bg-white px-1 gap-2">
             <View className="py-4 ">
                 <Text className="text-base mb-1 font-semibold">{food.title}</Text>
                 <View className="flex-row items-center mt-2 gap-2">                    
@@ -31,7 +32,7 @@ export default function FoodCard({ food } : Props) {
                 <Image
                     source={food.img}
                     className="rounded-xl w-full h-full"
-                    style={{ height: 200, width: screenWidth - 20 }}
+                    style={{ height: 200, width: screenWidth - 45 }}
                     resizeMode="cover"
                 />
             </View>

@@ -104,7 +104,6 @@ export default function EnjoiList ({fnTabIndex,index } : Props) {
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 16 }}
             >
                 {courseCards[index]?.map((item) => (
                     <Pressable
