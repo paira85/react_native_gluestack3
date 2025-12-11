@@ -58,6 +58,9 @@
       "eas": {
         "projectId": "bd09bd32-4bbe-4ae2-a107-c736fc26a76b"
       }
-    }
+    },
+    "reactNative": {
+      "fabricEnabled": false
+    },
   }
 }
