@@ -272,7 +272,7 @@ export default function MainLayout() {
             </Box>
 
 
-            <View className=" bg-white pt-6 px-2 mb-3 ">
+            <View className=" bg-white pt-6 px-2 mb-3">
               <Text className="text-[20px] font-extrabold text-black mb-2">
                 추천장소(핫)
               </Text>
@@ -281,12 +281,8 @@ export default function MainLayout() {
                 horizontal
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderFoodItem}
-                // showsVerticalScrollIndicator={false}
-                // showsHorizontalScrollIndicator={false}
-                // contentContainerStyle={{ paddingHorizontal: 16 }}
 
               />
-
             </View>
 
             <Divider className="bg-primary-100 m-5" />

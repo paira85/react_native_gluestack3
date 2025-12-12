@@ -12,13 +12,12 @@ interface Props {
     food : Food;
 }
 
-
 export default function FoodCard({ food } : Props) {
     if (!food ) return null;
     
     return (
-        <View className="mb-3 rounded-3xl mx-auto shadow-md bg-white px-1 gap-2">
-            <View className="py-4 ">
+        <View className="mb-3 rounded-3xl shadow-md bg-white gap-3 pr-2 ">
+            <View className="py-4">
                 <Text className="text-base mb-1 font-semibold">{food.title}</Text>
                 <View className="flex-row items-center mt-2 gap-2">                    
                     <Text className="text-base">{food.category}</Text>
@@ -31,7 +30,7 @@ export default function FoodCard({ food } : Props) {
             <View>
                 <Image
                     source={food.img}
-                    className="rounded-xl w-full h-full"
+                    className="rounded-xl w-full h-full min-w-[340px]"
                     style={{ height: 200, width: screenWidth - 45 }}
                     resizeMode="cover"
                 />
