@@ -5,7 +5,7 @@ import { Divider } from "@/components/ui/divider";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { useLocalSearchParams } from "expo-router";
-import { Badge, Ban,  Car, ChevronLeft, Heart, Share2, Utensils, Wifi } from "lucide-react-native";
+import { Badge, Ban, Car, ChevronLeft, Heart, Share2, Utensils, Wifi } from "lucide-react-native";
 import React, { useMemo, useState } from "react";
 import {
   View,
@@ -46,9 +46,12 @@ const MOCK: HotelDetail = {
   rating: 9.6,
   reviewCount: 1175,
   images: [
-    "https://images.unsplash.com/photo-1505691723518-36a5ac3b2f2b?w=1200",
-    "https://images.unsplash.com/photo-1560067174-8943bdfe42b6?w=1200",
-    "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200",
+    // "https://images.unsplash.com/photo-1505691723518-36a5ac3b2f2b?w=1200",
+    // "https://images.unsplash.com/photo-1560067174-8943bdfe42b6?w=1200",
+    // "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200",
+    require("/assets/images/house/02/1.png"),
+    require("/assets/images/house/02/2.png"),
+    require("/assets/images/house/02/3.png"),
   ],
   checkInLabel: "12.24 (수)",
   checkOutLabel: "12.25 (목)",
@@ -94,16 +97,16 @@ export default function HotelDetailScreen() {
   const data = MOCK;
 
   const ratingBadgeText = useMemo(() => data.rating.toFixed(1), [data.rating]);
-  console.log('ratingBadgeText' , ratingBadgeText)
+  console.log('ratingBadgeText', ratingBadgeText)
 
   return (
 
-          
+
     <SafeAreaView className="flex-1 bg-gray-100">
       {/* Header (Sticky 느낌: ScrollView 위에 고정) */}
       <Box className="bg-white">
         <HStack className="items-center justify-between px-4 py-3">
-          <Pressable onPress={() => console.log("back")}>
+          <Pressable onPress={() => navigation.navigate("/event", { id:'6'  })}>
             <HStack className="items-center">
               <ChevronLeft width={22} height={22} />
               <Text className="ml-1 text-base font-semibold">뒤로</Text>
@@ -150,7 +153,9 @@ export default function HotelDetailScreen() {
           {data.images.map((uri, idx) => (
             <View key={uri} style={{ width }}>
               <Image
-                source={{ uri }}
+                // source={{ uri }}
+                
+                source={uri}
                 style={{ width, height: 240 }}
                 resizeMode="cover"
               />

@@ -1,22 +1,20 @@
 import { Icon } from '@/components/ui/icon';
-import React, { useRef, useState } from 'react'
-import { Dimensions, Image, ImageSourcePropType, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useRef } from 'react';
+import { Dimensions, Image, ImageSourcePropType, ScrollView, TouchableOpacity, View } from 'react-native';
 
 import {
-    ChevronRightIcon,
-    ArrowRightIcon,
     ArrowLeftIcon,
-    Type
+    ArrowRightIcon
 } from 'lucide-react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
 
-type Props ={
-    urls : ImageSourcePropType[];
+type Props = {
+    urls: ImageSourcePropType[];
 }
 
-export default function HouseImage( {urls} : Props) {
+export default function HouseImage({ urls }: Props) {
     const offsetRef = useRef({ x: 0 });
     const scrollRef = useRef<ScrollView>(null);
 
@@ -30,7 +28,7 @@ export default function HouseImage( {urls} : Props) {
     };
 
     return (
-        <View>            
+        <View>
             <ScrollView
                 ref={scrollRef}
                 horizontal
@@ -60,17 +58,17 @@ export default function HouseImage( {urls} : Props) {
 
             <TouchableOpacity
                 onPress={() => move("left")}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 justify-center items-center"
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 justify-center items-center"
             >
-                <Icon as={ ArrowLeftIcon} />
+                <Icon as={ArrowLeftIcon} />
             </TouchableOpacity>
 
             <TouchableOpacity
                 onPress={() => move("right")}
                 className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 justify-center items-center"
             >
-                <Icon as={ ArrowRightIcon} />
-            </TouchableOpacity>            
+                <Icon as={ArrowRightIcon} />
+            </TouchableOpacity>
         </View>
     )
 }
