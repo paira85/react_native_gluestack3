@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Image, Pressable, Text } from "react-native";
+import { Image, Pressable, Text } from "react-native";
 
-import { ChevronDown, Eye, ThumbsUp } from "lucide-react-native";
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
-import { VStack } from "@/components/ui/vstack";
 import { Icon } from "@/components/ui/icon";
+import { VStack } from "@/components/ui/vstack";
+import { Eye, ThumbsUp } from "lucide-react-native";
+import { router } from "expo-router";
 
 const TABS = ["전체", "축제", "공지", "이벤트", "일반"];
 
@@ -26,7 +27,7 @@ interface Props {
 }
 
 export default function CommunityCard({ data }: Props) {
-   const mockData = [
+  const mockData = [
     {
       id: 1,
       title: "'양양송이 탐험대' 이벤트",
@@ -59,7 +60,7 @@ export default function CommunityCard({ data }: Props) {
       views: 13,
       likes: 0,
     },
-     {
+    {
       id: 4,
       title: "aaaaaaaa 👍🏼",
       type: "일반",
@@ -71,7 +72,7 @@ export default function CommunityCard({ data }: Props) {
       views: 13,
       likes: 0,
     },
-     {
+    {
       id: 5,
       title: "bbbbbbbb 👍🏼",
       type: "일반",
@@ -87,21 +88,27 @@ export default function CommunityCard({ data }: Props) {
 
   const [selected, setSelected] = useState(data?.type);
 
-  
+
   const filtered =
     selected === "전체" ? mockData : mockData.filter((v) => v.category === selected);
 
-  useEffect(()=>{
+  useEffect(() => {
     setSelected(data?.type)
-  },[data])
-  
+  }, [data])
+
   return (
-    <Box className="flex-1">
-      
+    <Box className="flex-1 px-4">
+
       {/* 게시물 리스트 */}
-      <ScrollView showsVerticalScrollIndicator={false} className="mt-4 px-4">
-        {filtered.map((item) => (
-          <Box key={item.id} className="border-b border-gray-200 pb-4 mb-4">
+      {/* <ScrollView showsVerticalScrollIndicator={false} className="mt-4 px-4"> */}
+      {filtered.map((item) => (
+        <Pressable key={item.id} onPress={() => {
+          router.push({
+            pathname: "/board/communityDetail",
+            params: {id:item.id}
+          })
+        }} >
+          <Box className="border-b border-gray-200 pb-4 mb-4">
             {/* 제목 */}
             <Text className="text-[17px] font-semibold mb-1">
               <Text
@@ -109,8 +116,8 @@ export default function CommunityCard({ data }: Props) {
                   item.type === "공지"
                     ? "text-blue-700"
                     : item.type === "이벤트"
-                    ? "text-blue-900"
-                    : "text-green-700"
+                      ? "text-blue-900"
+                      : "text-green-700"
                 }
               >
                 [{item.type}]{" "}
@@ -151,10 +158,13 @@ export default function CommunityCard({ data }: Props) {
 
               <Text className="text-[12px] text-gray-500 ml-auto">{item.date}</Text>
             </HStack>
-          </Box>
-        ))}
 
-      </ScrollView>
-    </Box>
+          </Box>
+        </Pressable>
+      ))
+      }
+
+      {/* </ScrollView> */}
+    </Box >
   );
 }

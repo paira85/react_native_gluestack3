@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, Image, Pressable, Text } from "react-native";
+import { ScrollView, Image, Pressable, Text, View } from "react-native";
 
 import { ChevronDown, Eye, ThumbsUp } from "lucide-react-native";
 import { Box } from "@/components/ui/box";
@@ -65,7 +65,7 @@ export default function CommunityList({ data }: Props) {
       </HStack>
 
       {/* 게시물 리스트 */}
-      <ScrollView showsVerticalScrollIndicator={false} className="mt-4 px-4 pb-20">
+      <ScrollView showsVerticalScrollIndicator={false} className="mt-4 px-4 gap-3">
         {fixedNotice.map((item) => (
           <Box key={item.id} className="border-b border-gray-200 pb-4 mb-4">
             {/* 제목 */}
@@ -120,9 +120,10 @@ export default function CommunityList({ data }: Props) {
           </Box>
         ))}
 
+        <View className="py-4"><Text className="font-semibold">일반 게시글</Text></View>
          {/* 일반 게시글 */}
         {filtered.map((item) => (
-          <Box key={item.id} className="border-b border-gray-200 pb-4 mb-4">
+          <Box key={item.id} className="border-b border-gray-200 pb-4 ">
             <HStack className="justify-between items-start">
               <VStack className="flex-1 pr-2">
                 <Text className="text-[17px] font-semibold mb-1">

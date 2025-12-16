@@ -76,12 +76,11 @@ export default function ListScreen({ }) {
                         <View className="flex-row items-center mb-5 gap-3" >
                             <Pressable className="w-8 bg-black h-8 rounded-full justify-center items-center "
                                 onPress={() => {
-                                    // router.push({
-                                    //     pathname: 'schedule/scheduleList',
-                                    //     params: {}
-                                    // })
-                                    navigation.navigate("schedule/scheduleList",{})
-
+                                    // navigation.navigate("schedule/scheduleList",{})
+                                    router.push({
+                                        pathname: "/main",
+                                        params: {},
+                                    })
                                 }}>
                                 <Icon as={ArrowLeftIcon} className="text-white font-semibold " />
                             </Pressable>

@@ -2,10 +2,11 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import CommunityList from "@/components/board/communityList";
-import { ArrowLeft, Search } from "lucide-react-native";
 import { Box } from "@/components/ui/box";
-import { Pressable, Text } from "react-native";
 import { Icon } from "@/components/ui/icon";
+import { router } from "expo-router";
+import { ArrowLeft, Search } from "lucide-react-native";
+import { Pressable, Text } from "react-native";
 
 export default function CommunityScreen({ navigation }) {
   const mockData = [
@@ -41,7 +42,7 @@ export default function CommunityScreen({ navigation }) {
       views: 13,
       likes: 0,
     },
-     {
+    {
       id: 4,
       title: "aaaaaaaa 👍🏼",
       type: "일반",
@@ -53,7 +54,7 @@ export default function CommunityScreen({ navigation }) {
       views: 13,
       likes: 0,
     },
-     {
+    {
       id: 5,
       title: "bbbbbbbb 👍🏼",
       type: "일반",
@@ -72,7 +73,11 @@ export default function CommunityScreen({ navigation }) {
       <Box className="flex-1 bg-white">
         {/* Header */}
         <Box className="px-4 py-3 border-b border-gray-200 flex-row items-center justify-between">
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable onPress={() => router.push({
+            pathname: "/main",
+            params: {},
+          })
+          }>
             <Icon as={ArrowLeft} className="h-6 w-6 text-black" />
           </Pressable>
 
