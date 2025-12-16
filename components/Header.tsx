@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Dimensions } from "react-native";
-import { Box } from './ui/box'
 import * as Location from "expo-location";
-import { Image } from './ui/image';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Pressable, Text, View } from "react-native";
 import { Avatar, AvatarImage } from './ui/avatar';
+import { Box } from './ui/box';
+import { Image } from './ui/image';
+import { router } from "expo-router";
 
 
 const { width } = Dimensions.get("window");
 const isSmall = width <= 360;
 export default function Header() {
-    const [alramCount,setAlramCount] = useState<number>(1)
+    const [alramCount, setAlramCount] = useState<number>(1)
     const [loading, setLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState(null);
     const [location, setLocation] = useState(null);
@@ -65,63 +66,71 @@ export default function Header() {
     }, []);
 
     return (
-    <Box className ="flex flex-row items-center justify-between px-4 py-2 bg-primary-500 screen-xs:text-[11px]  "
+        <Box className="flex flex-row items-center justify-between px-4 py-2 bg-primary-500 screen-xs:text-[11px]  "
         >
-        {/* Logo */ }
-        < Box className ="flex-row h-full items-center" >
-            <Image className="w-10 h-10"
-            style={{ tintColor: "#ffffff" }}
-            source={require("../assets/images/logs/home_white.png")}
-            resizeMode="contain"
-            alt="HEADER_LOG"
-            />
-            <Text className="pl-3  font-bold text-white">GoGo Inje</Text>
-        </Box >
-
-        {/* Weather */ }
-        < View className = "flex-row items-center " >
-            {weather?.temp  ?
-            (
-                <>
-                <Text className="text-[22px] font-bold text-white mr-1">{weather?.temp}°</Text>
-                <Image
-                source={{
-                    uri: `https://openweathermap.org/img/wn/${weather?.icon}@2x.png`,
-                }}
-                className="w-10 h-10"
-                alt="HEADER_WEATHER"
+            {/* Logo */}
+            < Box className="flex-row h-full items-center" >
+                <Image className="w-10 h-10"
+                    style={{ tintColor: "#ffffff" }}
+                    source={require("../assets/images/logs/home_white.png")}
+                    resizeMode="contain"
+                    alt="HEADER_LOG"
                 />
-                <Text className="text-[16px] text-white">
-                    {/* ☀ */}
-                    {weather?.name}
-                </Text>
-                </>
-            )
-                : (
-                    <>
-                    <Text className="text-[22px] font-bold text-white mr-1">19°</Text> 
-                    <Text className="text-[16px] text-white">☀ 대한민국</Text>
-                    </>
-                )
-            }           
-        </View >
+                <Text className="pl-3  font-bold text-white">GoGo Inje</Text>
+            </Box >
 
-        <View className="flex-row items-center space-x-5">
-            <View className="relative">
-                <Avatar size="md">
-                    <AvatarImage
-                        source={require("/assets/images/background/1739799352351-26.jpg")}
-                    />
+            {/* Weather */}
+            < View className="flex-row items-center " >
+                {weather?.temp ?
+                    (
+                        <>
+                            <Text className="text-[22px] font-bold text-white mr-1">{weather?.temp}°</Text>
+                            <Image
+                                source={{
+                                    uri: `https://openweathermap.org/img/wn/${weather?.icon}@2x.png`,
+                                }}
+                                className="w-10 h-10"
+                                alt="HEADER_WEATHER"
+                            />
+                            <Text className="text-[16px] text-white">
+                                {/* ☀ */}
+                                {weather?.name}
+                            </Text>
+                        </>
+                    )
+                    : (
+                        <>
+                            <Text className="text-[22px] font-bold text-white mr-1">19°</Text>
+                            <Text className="text-[16px] text-white">☀ 대한민국</Text>
+                        </>
+                    )
+                }
+            </View >
 
-                    {/* 알람 Badge */}
-                    <View className="absolute -top-1 -right-1 bg-blue-700 w-4 h-4 rounded-full items-center justify-center">
-                        <Text className="text-white text-[10px]">
-                            {alramCount}
-                        </Text>
+            <Pressable onPress={() =>
+                router.push({
+                    pathname: "/my/mydata",
+                    params: {},
+                })
+
+            }>
+                <View className="flex-row items-center space-x-5">
+                    <View className="relative">
+                        <Avatar size="md">
+                            <AvatarImage
+                                source={require("/assets/images/background/1739799352351-26.jpg")}
+                            />
+
+                            {/* 알람 Badge */}
+                            <View className="absolute -top-1 -right-1 bg-blue-700 w-4 h-4 rounded-full items-center justify-center">
+                                <Text className="text-white text-[10px]">
+                                    {alramCount}
+                                </Text>
+                            </View>
+                        </Avatar>
                     </View>
-                </Avatar>
-            </View>
-        </View>
-    </Box >
-  )
+                </View>
+            </Pressable>
+        </Box >
+    )
 }
